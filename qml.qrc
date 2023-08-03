@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>assets/icon.png</file>
+        <file>assets/lamp_off.png</file>
+        <file>assets/lamp_on.png</file>
+        <file>components/LampControl.qml</file>
+        <file>components/LampColor.qml</file>
+        <file>assets/colors.json</file>
+    </qresource>
+</RCC>
