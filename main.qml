@@ -23,7 +23,8 @@ Window {
         id: settings
         fileName: "configuration"
         category: "auth"
-        property alias oauthToken: ""
+
+        property string oauthToken: "y0_AgAAAABoWWAXAAkYVAAAAADbapjdlX9c2HyXS-60YHmLVZJj8AhQmtM"
 
         Component.onCompleted: {
             lampsListModel.oauthToken = oauthToken;
@@ -89,6 +90,7 @@ Window {
                         anchors.fill: parent
 
                         model: lampsListModel
+                        textRole: "deviceName"
                     }
                 }
 

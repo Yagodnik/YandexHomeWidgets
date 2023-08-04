@@ -4,6 +4,16 @@
 #include "yandex/yandexlamp.h"
 #include "models/lampslistmodel.h"
 #include "colors.h"
+#include <QtNetworkAuth>
+#include <QDesktopServices>
+#include "yandex/yandexwrapper.h"
+
+// TODO: Fix bug with colors
+// TODO: Add OAuth2
+// TODO: Make choosing several lamps
+// TODO: Settings
+// TODO: Ask for current lamp state when focusing
+// TODO: Add messages when no internet connection
 
 int main(int argc, char *argv[])
 {
@@ -11,7 +21,14 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
 
-    YandexLamp lamp("9435ff12-0bef-453e-8f85-1c2898c56013", "y0_AgAAAABoWWAXAAkYVAAAAADbapjdlX9c2HyXS-60YHmLVZJj8AhQmtM");
+//    QGuiApplication app(argc, argv);
+
+//    YandexWrapper wrapper;
+//    wrapper.grant();
+
+//    return app.exec();
+
+    YandexLamp lamp("9435ff12-0bef-453e-8f85-1c2898c56013", "y0_AgAAAABoWWAXAApIQQAAAADpY1xd2LVK5HyrSgqOUqrWuYcwxcs9JEU");
     Colors lampColors;
     LampsListModel lampsListModel;
 

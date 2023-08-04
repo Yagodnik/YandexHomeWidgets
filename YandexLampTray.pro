@@ -8,13 +8,15 @@ SOURCES += \
         main.cpp \
         models/lampslistmodel.cpp \
         yandex/yandexdevicedata.cpp \
-        yandex/yandexlamp.cpp
+        yandex/yandexlamp.cpp \
+        yandex/yandexwrapper.cpp
 
 HEADERS += \
     colors.h \
     models/lampslistmodel.h \
     yandex/yandexdevicedata.h \
-    yandex/yandexlamp.h
+    yandex/yandexlamp.h \
+    yandex/yandexwrapper.h
 
 RESOURCES += qml.qrc
 
