@@ -7,5 +7,6 @@
         <file>components/LampControl.qml</file>
         <file>components/LampColor.qml</file>
         <file>assets/colors.json</file>
+        <file>assets/secrets.json</file>
     </qresource>
 </RCC>

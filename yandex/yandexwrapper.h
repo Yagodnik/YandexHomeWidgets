@@ -6,6 +6,7 @@
 #include <QtNetworkAuth>
 #include <QByteArray>
 #include <QDesktopServices>
+#include "secrets.h"
 
 class YandexWrapper : public QObject
 {
@@ -14,6 +15,9 @@ public:
     explicit YandexWrapper(QObject *parent = nullptr);
 
     void grant();
+
+signals:
+    void granted();
 
 private:
     QOAuth2AuthorizationCodeFlow oauth2;
