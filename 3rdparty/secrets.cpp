@@ -1,5 +1,7 @@
 #include "secrets.h"
 
+Secrets::Secrets(): settings("ArtemYagodnik", "YandexLampTray") {}
+
 Secrets *Secrets::getInstance()
 {
     static Secrets instance;
@@ -28,5 +30,14 @@ Secrets *Secrets::getInstance()
 
 QString Secrets::get(QString key)
 {
-    return data.value(key);
+    if (data.contains(key))
+        return data.value(key);
+    else
+        return settings.value(key).toString();
 }
+
+void Secrets::saveToSettings(QString key, QString value)
+{
+    settings.setValue(key, value);
+}
+

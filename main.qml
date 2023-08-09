@@ -13,22 +13,38 @@ Window {
     visible: false
     flags: Qt.Popup
 
+    Component.onCompleted: {
+        // Reading oauthToken from Secrets
+        lampsListModel.oauthToken = "y0_AgAAAABoWWAXAApIQQAAAADpY1xd2LVK5HyrSgqOUqrWuYcwxcs9JEU";
+        lampsListModel.reload();
+
+        yandexHome.checkConnection();
+    }
+
     onActiveFocusItemChanged: {
         if (!activeFocusItem) {
             visible = false;
         }
     }
 
-    Settings {
-        id: settings
-        fileName: "configuration"
-        category: "auth"
+    Connections {
+        target: yandexHome
 
-        property string oauthToken: "y0_AgAAAABoWWAXAAkYVAAAAADbapjdlX9c2HyXS-60YHmLVZJj8AhQmtM"
+        function onConnectionChecked(result) {
+            if (result <= 0) {
+//                trayIcon.showMessage("Нет инета", "Брат, инета нема (╯╭╮╰)");
+//                lampTab.enabled = false;
+            }
+        }
+    }
 
-        Component.onCompleted: {
-            lampsListModel.oauthToken = oauthToken;
-            lampsListModel.reload();
+    Connections {
+        target: yandexOAuth
+
+        function onGranted() {
+            console.log("Authorized with: " + yandexOAuth.getToken())
+
+
         }
     }
 
@@ -116,8 +132,71 @@ Window {
                 id: settingsTab
 
                 Button {
+                    id: authButton
                     width: parent.width
                     text: "Авторизоваться через Яндекс ID"
+
+                    onClicked: {
+                        yandexOAuth.grant();
+                    }
+                }
+
+                Item {
+                    id: accountData
+
+                    width: parent.width
+
+                    anchors.top: authButton.bottom
+                    anchors.topMargin: 10
+
+                    Rectangle {
+                        id: avatar
+                        anchors.horizontalCenter: parent.horizontalCenter
+
+                        width: 64
+                        height: 64
+
+                        color: "red"
+                        radius: 45
+                    }
+
+                    Text {
+                        id: name
+
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.top: avatar.bottom
+                        anchors.topMargin: 7
+
+                        text: "John Doe"
+                    }
+
+                    Button {
+                        id: logoutButton
+                        width: parent.width
+                        text: "Выйти из аккаунта"
+
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.top: name.bottom
+                        anchors.topMargin: 7
+
+                        onClicked: {
+                            yandexOAuth.grant();
+                        }
+                    }
+
+                    Button {
+                        id: reloginButton
+                        width: parent.width
+                        text: "Сменить аккаунт"
+
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.top: logoutButton.bottom
+                        anchors.topMargin: 7
+
+                        onClicked: {
+                            yandexOAuth.grant();
+                        }
+                    }
                 }
             }
         }

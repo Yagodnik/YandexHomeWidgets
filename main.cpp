@@ -3,10 +3,11 @@
 #include <QQmlContext>
 #include "yandex/yandexlamp.h"
 #include "models/lampslistmodel.h"
-#include "colors.h"
+#include "3rdparty/colors.h"
 #include <QtNetworkAuth>
 #include <QDesktopServices>
-#include "yandex/yandexwrapper.h"
+#include "yandex/yandexoauth.h"
+#include "yandex/yandexhome.h"
 
 // TODO: Fix bug with colors
 // TODO: Add OAuth2
@@ -20,18 +21,13 @@ int main(int argc, char *argv[])
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
-//    QGuiApplication app(argc, argv);
+    QGuiApplication app(argc, argv);
 
-//    YandexWrapper wrapper;
-//    wrapper.grant();
-
-//    return app.exec();
-
-    YandexLamp lamp("9435ff12-0bef-453e-8f85-1c2898c56013", "y0_AgAAAABoWWAXAApIQQAAAADpY1xd2LVK5HyrSgqOUqrWuYcwxcs9JEU");
+    YandexOAuth oauth;
+    YandexHome home;
+    YandexLamp lamp("9435ff12-0bef-453e-8f85-1c2898c56013", "");
     Colors lampColors;
     LampsListModel lampsListModel;
-
-    QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
 
@@ -39,6 +35,8 @@ int main(int argc, char *argv[])
     context->setContextProperty("lamp", &lamp);
     context->setContextProperty("lampColors", &lampColors);
     context->setContextProperty("lampsListModel", &lampsListModel);
+    context->setContextProperty("yandexHome", &home);
+    context->setContextProperty("yandexOAuth", &oauth);
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

@@ -4,21 +4,23 @@ QT += networkauth
 CONFIG += c++11
 
 SOURCES += \
-        colors.cpp \
+        3rdparty/colors.cpp \
         main.cpp \
         models/lampslistmodel.cpp \
-        secrets.cpp \
+        3rdparty/secrets.cpp \
         yandex/yandexdevicedata.cpp \
+        yandex/yandexhome.cpp \
         yandex/yandexlamp.cpp \
-        yandex/yandexwrapper.cpp
+        yandex/yandexoauth.cpp
 
 HEADERS += \
-    colors.h \
+    3rdparty/colors.h \
     models/lampslistmodel.h \
-    secrets.h \
+    3rdparty/secrets.h \
     yandex/yandexdevicedata.h \
+    yandex/yandexhome.h \
     yandex/yandexlamp.h \
-    yandex/yandexwrapper.h
+    yandex/yandexoauth.h
 
 RESOURCES += qml.qrc
 
