@@ -18,7 +18,9 @@ GroupBox {
                 Layout.fillWidth: true
 
                 onClicked: {
-                    lamp.on();
+                    // Check if it undefiend
+
+                    yandexHome.on(currentLamp.currentValue);
                 }
             }
 
@@ -28,7 +30,7 @@ GroupBox {
                 Layout.fillWidth: true
 
                 onClicked: {
-                    lamp.off();
+                    yandexHome.off(currentLamp.currentValue);
                 }
             }
         }
@@ -50,7 +52,7 @@ GroupBox {
                 Layout.fillWidth: true
 
                 onValueChanged: {
-                    lamp.setBrightness(value);
+                    yandexHome.setBrightness(currentLamp.currentValue, value);
                 }
             }
         }

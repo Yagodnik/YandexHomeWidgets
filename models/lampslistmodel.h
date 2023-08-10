@@ -5,17 +5,12 @@
 #include <QList>
 #include <QDebug>
 #include <QStringList>
-#include <QNetworkAccessManager>
-#include <QNetworkReply>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
+#include "yandex/yandexlamp.h"
 #include "yandex/yandexdevicedata.h"
 
 class LampsListModel : public QAbstractListModel
 {
     Q_OBJECT
-    Q_PROPERTY(QString oauthToken MEMBER oauthToken WRITE setOAuthToken)
 public:
     enum Roles {
         TextRole = Qt::UserRole + 1,
@@ -29,16 +24,12 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QHash<int, QByteArray> roleNames() const;
 
-    Q_INVOKABLE void reload();
-    Q_INVOKABLE void setOAuthToken(QVariant text);
-
-signals:
-    void devicesLoaded(int count);
+    void add(QList<YandexLamp*> loadedLamps);
 
 private:
     QList<YandexDeviceData*> lamps;
-    QString oauthToken;
-    QNetworkAccessManager *networkAccessManager;
 };
+
+Q_DECLARE_METATYPE(LampsListModel)
 
 #endif // LAMPSLISTMODEL_H

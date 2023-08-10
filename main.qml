@@ -13,12 +13,19 @@ Window {
     visible: false
     flags: Qt.Popup
 
-    Component.onCompleted: {
-        // Reading oauthToken from Secrets
-        lampsListModel.oauthToken = "y0_AgAAAABoWWAXAApIQQAAAADpY1xd2LVK5HyrSgqOUqrWuYcwxcs9JEU";
-        lampsListModel.reload();
+    function startupCheck() {
+        yandexAccount.askInfo();
 
-        yandexHome.checkConnection();
+//        lampsListModel.oauthToken = yandexOAuth.getToken();
+//        lampsListModel.reload();
+
+        yandexHome.getAllDevices(lampsListModel);
+
+        accountData.enabled = true;
+    }
+
+    Component.onCompleted: {
+        startupCheck();
     }
 
     onActiveFocusItemChanged: {
@@ -30,11 +37,22 @@ Window {
     Connections {
         target: yandexHome
 
-        function onConnectionChecked(result) {
-            if (result <= 0) {
-//                trayIcon.showMessage("Нет инета", "Брат, инета нема (╯╭╮╰)");
-//                lampTab.enabled = false;
+        function onDevicesLoaded(result) {
+            if (result < 0) {
+                trayIcon.showMessage("Нет инета", "Брат, инета нема (╯╭╮╰)");
+                lampTab.enabled = false;
+            } else if (result === 0) {
+                trayIcon.showMessage("Нет ламп", "Брат, ламп нема (╯╭╮╰)");
+                lampTab.enabled = false;
+            } else {
+                lampTab.enabled = true;
+
+                // Generating list of lamps
             }
+        }
+
+        function onLampError(deviceId) {
+            trayIcon.showMessage("Ошибка!", "Не удалось отправить запрос лампочке!");
         }
     }
 
@@ -44,7 +62,22 @@ Window {
         function onGranted() {
             console.log("Authorized with: " + yandexOAuth.getToken())
 
+            yandexOAuth.saveToken(yandexOAuth.getToken());
+            startupCheck();
+            trayIcon.showMessage("Вы авторизовались в аккаунт!", "Успех крч");
+        }
+    }
 
+    Connections {
+        target: yandexAccount
+
+        function onInfoReady() {
+            name.text = yandexAccount.getName();
+        }
+
+        function onError() {
+            trayIcon.showMessage("Ошибка", "Не удалось войти в аккаунт!");
+            accountData.enabled = false;
         }
     }
 
@@ -96,35 +129,61 @@ Window {
                 anchors.fill: parent
 
                 Item {
-                    id: lampComboBox
-                    width: parent.width
+                    id: content
+                    anchors.fill: parent
 
-                    anchors.top: parent.top
-                    height: 25
+                    visible: true
 
-                    ComboBox {
-                        anchors.fill: parent
+                    Item {
+                        id: lampComboBox
+                        width: parent.width
 
-                        model: lampsListModel
-                        textRole: "deviceName"
+                        anchors.top: parent.top
+                        height: 25
+
+                        ComboBox {
+                            id: currentLamp
+                            anchors.fill: parent
+
+                            currentIndex: 0
+                            model: lampsListModel
+                            textRole: "deviceName"
+                            valueRole: "deviceId"
+
+                            onActivated: {
+                                console.log("New device: " + currentValue + " / " + currentText);
+                            }
+                        }
+                    }
+
+                    LampControl {
+                        id: lampControls
+                        width: parent.width
+
+                        anchors.top: lampComboBox.bottom
+                        anchors.topMargin: 5
+                    }
+
+                    LampColor {
+                        id: colorControls
+                        width: parent.width
+
+                        anchors.top: lampControls.bottom
+                        anchors.topMargin: 5
+                        anchors.bottom: lampTab.bottom
                     }
                 }
 
-                LampControl {
-                    id: lampControls
-                    width: parent.width
+                Item {
+                    id: noLampsContent
+                    anchors.fill: parent
 
-                    anchors.top: lampComboBox.bottom
-                    anchors.topMargin: 5
-                }
+                    visible: false
 
-                LampColor {
-                    id: colorControls
-                    width: parent.width
-
-                    anchors.top: lampControls.bottom
-                    anchors.topMargin: 5
-                    anchors.bottom: lampTab.bottom
+                    Text {
+                        anchors.centerIn: parent.Center
+                        text: "К вашему аккаунту не привязано ни одной лампы!"
+                    }
                 }
             }
 
@@ -167,7 +226,7 @@ Window {
                         anchors.top: avatar.bottom
                         anchors.topMargin: 7
 
-                        text: "John Doe"
+                        text: "???"
                     }
 
                     Button {

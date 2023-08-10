@@ -8,6 +8,7 @@ SOURCES += \
         main.cpp \
         models/lampslistmodel.cpp \
         3rdparty/secrets.cpp \
+        yandex/yandexaccount.cpp \
         yandex/yandexdevicedata.cpp \
         yandex/yandexhome.cpp \
         yandex/yandexlamp.cpp \
@@ -15,8 +16,10 @@ SOURCES += \
 
 HEADERS += \
     3rdparty/colors.h \
+    3rdparty/constants.h \
     models/lampslistmodel.h \
     3rdparty/secrets.h \
+    yandex/yandexaccount.h \
     yandex/yandexdevicedata.h \
     yandex/yandexhome.h \
     yandex/yandexlamp.h \

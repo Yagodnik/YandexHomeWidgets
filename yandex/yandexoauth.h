@@ -7,6 +7,7 @@
 #include <QByteArray>
 #include <QDesktopServices>
 #include "3rdparty/secrets.h"
+#include "3rdparty/constants.h"
 
 class YandexOAuth : public QObject
 {
@@ -16,6 +17,7 @@ public:
 
     Q_INVOKABLE void grant();
     Q_INVOKABLE QString getToken();
+    Q_INVOKABLE void saveToken(QString token);
 
 signals:
     void granted();

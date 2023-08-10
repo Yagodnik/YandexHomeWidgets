@@ -1,12 +1,13 @@
 #include "yandexlamp.h"
 
 YandexLamp::YandexLamp(QString deviceId,
-                       QString oauthToken,
+                       QString deviceName,
                        QObject *parent) : QObject(parent)
 {
-    _deviceId = deviceId;
-    _oauthToken = oauthToken;
-    _lampState = UNKNOWN;
+    this->deviceId = deviceId;
+    this->deviceName = deviceName;
+    this->lampState = UNKNOWN;
+
     networkManager = new QNetworkAccessManager(this);
 
     connect(networkManager, &QNetworkAccessManager::finished, this, &YandexLamp::onReply);
@@ -19,9 +20,11 @@ YandexLamp::~YandexLamp()
 
 LampState YandexLamp::getState()
 {
-    QUrl deviceUrl = QUrl("https://api.iot.yandex.net/v1.0/devices/" + _deviceId);
+    Secrets *secrets = Secrets::getInstance();
+
+    QUrl deviceUrl = QUrl("https://api.iot.yandex.net/v1.0/devices/" + deviceId);
     QNetworkRequest request(deviceUrl);
-    QString authorizationHeader = "Bearer " + QString(_oauthToken);
+    QString authorizationHeader = "Bearer " + secrets->get(OAUTH_TOKEN_NAME);
 
     request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
     request.setRawHeader("Authorization", authorizationHeader.toLocal8Bit());
@@ -31,6 +34,18 @@ LampState YandexLamp::getState()
     Q_UNUSED(reply);
 
     return UNKNOWN;
+}
+
+QString YandexLamp::getId()
+{
+    return deviceId;
+}
+
+YandexDeviceData *YandexLamp::getDeviceData()
+{
+    return new YandexDeviceData(
+        deviceId, deviceName
+    );
 }
 
 void YandexLamp::on()
@@ -80,7 +95,7 @@ QJsonObject YandexLamp::generateRequest(QJsonObject action)
 
     QJsonArray devices;
     QJsonObject device;
-    device["id"] = _deviceId;
+    device["id"] = deviceId;
     device["actions"] = actions;
 
     devices.append(device);
@@ -160,11 +175,13 @@ QJsonObject YandexLamp::generateAction(QRgb color)
 
 void YandexLamp::sendPostRequest(QByteArray data)
 {
+    Secrets *secrets = Secrets::getInstance();
+
     QTime time;
 
     QUrl deviceUrl = QUrl("https://api.iot.yandex.net/v1.0/devices/actions");
     QNetworkRequest request(deviceUrl);
-    QString authorizationHeader = "Bearer " + QString(_oauthToken);
+    QString authorizationHeader = "Bearer " + secrets->get(OAUTH_TOKEN_NAME);
     QString hash = QString(QCryptographicHash::hash(time.currentTime().toString().toLocal8Bit(),
                                                     QCryptographicHash::Md5).toHex());
     request.setRawHeader("X-Request-Id", hash.toLocal8Bit());

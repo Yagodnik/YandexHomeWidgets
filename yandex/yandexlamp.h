@@ -10,6 +10,9 @@
 #include <QJsonArray>
 #include <QColor>
 #include <QRgb>
+#include "3rdparty/constants.h"
+#include "3rdparty/secrets.h"
+#include "yandex/yandexdevicedata.h"
 
 typedef enum {
     ON, OFF, UNKNOWN
@@ -20,20 +23,23 @@ class YandexLamp : public QObject
     Q_OBJECT
 public:
     explicit YandexLamp(QString deviceId,
-                        QString oauthTokeb,
+                        QString deviceName,
                         QObject *parent = nullptr);
     ~YandexLamp();
 
     LampState getState();
+    QString getId();
+    YandexDeviceData *getDeviceData();
+
     Q_INVOKABLE void on();
     Q_INVOKABLE void off();
     Q_INVOKABLE void setBrightness(int brightness);
     Q_INVOKABLE void setColor(QRgb color);
 
 private:
-    LampState _lampState;
-    QString _deviceId;
-    QString _oauthToken;
+    LampState lampState;
+    QString deviceId;
+    QString deviceName;
     QNetworkAccessManager *networkManager;
 
     QJsonObject generateRequest(QJsonObject action);

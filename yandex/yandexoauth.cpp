@@ -8,19 +8,19 @@ YandexOAuth::YandexOAuth(QObject *parent)
 
     Secrets *secrets = Secrets::getInstance();
 
-    qDebug() << "Client id:" << secrets->get("client_id");
+    token = secrets->get(OAUTH_TOKEN_NAME);
+
+    qDebug() << "Saved token:" << token;
 
     oauth2->setReplyHandler(replyHandler);
     oauth2->setAuthorizationUrl(QUrl("https://oauth.yandex.ru/authorize"));
     oauth2->setAccessTokenUrl(QUrl("https://oauth.yandex.ru/token?grant_type=authorization_code"));
     oauth2->setClientIdentifier(secrets->get("client_id"));
     oauth2->setClientIdentifierSharedKey(secrets->get("client_secret"));
-    oauth2->setScope("iot:view iot:control");
+    oauth2->setScope("iot:view iot:control login:info login:avatar");
 
     connect(oauth2, &QOAuth2AuthorizationCodeFlow::statusChanged, [=](QAbstractOAuth::Status status) {
         if (status == QAbstractOAuth::Status::Granted) {
-            qDebug() << "granted!";
-
             token = oauth2->token();
             emit granted();
         }
@@ -28,12 +28,9 @@ YandexOAuth::YandexOAuth(QObject *parent)
 
     connect(oauth2, &QOAuth2AuthorizationCodeFlow::authorizeWithBrowser, [=](QUrl url) {
         QUrlQuery query(url);
-
-        qDebug() << url;
-
         query.addQueryItem("response_type", "code");
-
         url.setQuery(query);
+
         QDesktopServices::openUrl(url);
     });
 }
@@ -46,4 +43,11 @@ void YandexOAuth::grant()
 QString YandexOAuth::getToken()
 {
     return token;
+}
+
+void YandexOAuth::saveToken(QString token)
+{
+    Secrets *secrets = Secrets::getInstance();
+
+    secrets->saveToSettings(OAUTH_TOKEN_NAME, token);
 }
