@@ -10,12 +10,10 @@
 #include "yandex/yandexaccount.h"
 
 // TODO: Fix bug with colors
-// TODO: Make choosing several lamps
-// TODO: Settings
 // TODO: Ask for current lamp state when focusing
-// TODO: Add messages when no internet connection
 // TODO: Check for memory leaks
 // TODO: Create base class for all yandex devices
+// TODO: Add capabilities classes
 
 int main(int argc, char *argv[])
 {
@@ -29,6 +27,14 @@ int main(int argc, char *argv[])
     YandexHome home;
     Colors lampColors;
     LampsListModel lampsListModel;
+
+    home.getAllDevices(QVariant());
+
+    QObject::connect(&home, &YandexHome::devicesLoaded, [&home](int result) {
+        home.reloadInfo();
+    });
+
+    return app.exec();
 
     QQmlApplicationEngine engine;
 

@@ -4,20 +4,32 @@ import QtQuick.Controls.Fusion
 import QtQuick.Layouts 1.12
 import Qt.labs.platform
 import Qt.labs.settings
-import "./components/"
+import QtQuick.Shapes 1.5
+//import "./components/"
+import "./circularSlider"
 
 Window {
     id: window
+    title: "YandexTrayApp"
     width: 300
-    height: 460
+    height: 365
     visible: false
-    flags: Qt.Popup
+    flags: Qt.FramelessWindowHint
+    color: "transparent"
+
+    FontLoader {
+        id: textFont
+        source: "qrc:/assets/Montserrat-SemiBold.ttf"
+    }
+
+    Rectangle {
+        color: "#E8E9EB"
+        radius: 20
+        anchors.fill: parent
+    }
 
     function startupCheck() {
         yandexAccount.askInfo();
-
-//        lampsListModel.oauthToken = yandexOAuth.getToken();
-//        lampsListModel.reload();
 
         yandexHome.getAllDevices(lampsListModel);
 
@@ -73,11 +85,19 @@ Window {
 
         function onInfoReady() {
             name.text = yandexAccount.getName();
+
+            authButton.enabled = false;
+            logoutButton.enabled = true;
+            reloginButton.enabled = true;
         }
 
         function onError() {
             trayIcon.showMessage("Ошибка", "Не удалось войти в аккаунт!");
-            accountData.enabled = false;
+//            accountData.enabled = false;
+
+            authButton.enabled = true;
+            logoutButton.enabled = false;
+            reloginButton.enabled = false;
         }
     }
 
@@ -100,164 +120,213 @@ Window {
         }
     }
 
-    Item {
+    Flickable {
         id: app
         anchors.fill: parent
         anchors.margins: 8
+        clip: true
 
-        TabBar {
-            id: bar
-            width: parent.width
+        Item {
+            id: appbar
 
-            TabButton {
-                text: "Лампочки"
+            anchors.top: parent.top
+
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 60
+
+            Rectangle {
+                anchors.fill: parent
+                color: "#4D7298"
+                opacity: 0.68
+                radius: 5
             }
 
-            TabButton {
-                text: "Настройки"
+            Image {
+                id: icon
+
+                width: 32
+                height: 32
+
+                anchors.left: parent.left
+                anchors.leftMargin: 12
+                anchors.verticalCenter: parent.verticalCenter
+
+                source: "https://avatars.mds.yandex.net/get-yapic/0/0-0/islands-retina-small"
+            }
+
+            Text {
+                height: 32
+
+                color: "#E8E9EB"
+
+                anchors.left: icon.right
+                anchors.leftMargin: 8
+                anchors.verticalCenter: parent.verticalCenter
+
+                verticalAlignment: Text.AlignVCenter
+
+                font.family: textFont.font.family
+                font.weight: textFont.font.weight
+                font.pixelSize: 18
+
+                text: "Yandex Account"
+            }
+
+            Image {
+                id: logoutButtom
+
+                width: 32
+                height: 32
+
+                anchors.right: parent.right
+                anchors.rightMargin: 12
+                anchors.verticalCenter: parent.verticalCenter
+
+                source: "qrc:/assets/logout.png"
             }
         }
 
-        StackLayout {
-            anchors.top: bar.bottom
-            anchors.topMargin: 4
-            width: parent.width
-            currentIndex: bar.currentIndex
+        GridView {
+            id: grid
 
-            Item {
-                id: lampTab
-                anchors.fill: parent
+            anchors.top: appbar.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
 
-                Item {
-                    id: content
+            anchors.topMargin: 5
+
+            cellWidth: parent.width
+            cellHeight: 160
+
+            delegate: Item {
+                width: grid.cellWidth - 4
+                height: grid.cellHeight - 4
+
+                Rectangle {
                     anchors.fill: parent
+                    color: "#4D7298"
+                    opacity: 0.68
+                    radius: 5
+                }
 
-                    visible: true
+                Image {
+                    id: icon2
 
-                    Item {
-                        id: lampComboBox
-                        width: parent.width
+                    width: 38
+                    height: 38
 
-                        anchors.top: parent.top
-                        height: 25
+                    anchors.top: parent.top
+                    anchors.left: parent.left
 
-                        ComboBox {
-                            id: currentLamp
-                            anchors.fill: parent
+                    anchors.topMargin: 6
+                    anchors.leftMargin: 8
 
-                            currentIndex: 0
-                            model: lampsListModel
-                            textRole: "deviceName"
-                            valueRole: "deviceId"
+                    source: "qrc:/assets/lamp.png"
+                }
 
-                            onActivated: {
-                                console.log("New device: " + currentValue + " / " + currentText);
+                Text {
+                    height: 32
+
+                    color: "#E8E9EB"
+
+                    anchors.top: parent.top
+                    anchors.left: icon2.right
+
+                    anchors.topMargin: 8
+                    anchors.leftMargin: 4
+
+                    verticalAlignment: Text.AlignVCenter
+
+                    font.family: textFont.font.family
+                    font.weight: textFont.font.weight
+                    font.pixelSize: 18
+
+                    text: deviceName
+                }
+
+
+                Switch {
+                    id: control
+
+                    anchors.top: parent.top
+                    anchors.right: parent.right
+
+                    anchors.topMargin: 8
+                    anchors.rightMargin: 4
+
+                    indicator: Rectangle {
+                        implicitWidth: 40
+                        implicitHeight: 20
+                        x: control.leftPadding
+                        y: parent.height / 2 - height / 2
+                        radius: 13
+                        color: control.checked ? "#EC7357" : "#ffffff"
+                        border.color: control.checked ? "#EC7357" : "#cccccc"
+
+                        Rectangle {
+                            x: control.checked ? parent.width - width : 0
+                            width: 20
+                            height: 20
+                            radius: 13
+                            color: control.down ? "#cccccc" : "#ffffff"
+                            border.color: control.checked ? (control.down ? "#EC7357" : "#EC7357") : "#999999"
+                        }
+                    }
+                }
+
+                Slider {
+                    id: control2
+
+                    value: 0.5
+                    live: false
+
+                    anchors.top: control.bottom
+                    anchors.topMargin: 4
+
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.leftMargin: 4
+                    anchors.rightMargin: 4
+
+                    background: Rectangle {
+                        x: control2.leftPadding
+                        y: control2.topPadding + control2.availableHeight / 2 - height / 2
+                        implicitWidth: 200
+                        implicitHeight: 20
+                        width: control2.availableWidth
+                        height: implicitHeight
+                        radius: 13
+                        color: "#E8E9EB"
+
+                        Flickable {
+                            clip: true
+                            width: control2.visualPosition * parent.width
+                            height: parent.height
+
+                            Rectangle {
+                                anchors.fill: parent
+
+                                color: "#EC7357"
+                                radius: 13
                             }
                         }
                     }
 
-                    LampControl {
-                        id: lampControls
-                        width: parent.width
-
-                        anchors.top: lampComboBox.bottom
-                        anchors.topMargin: 5
-                    }
-
-                    LampColor {
-                        id: colorControls
-                        width: parent.width
-
-                        anchors.top: lampControls.bottom
-                        anchors.topMargin: 5
-                        anchors.bottom: lampTab.bottom
-                    }
-                }
-
-                Item {
-                    id: noLampsContent
-                    anchors.fill: parent
-
-                    visible: false
-
-                    Text {
-                        anchors.centerIn: parent.Center
-                        text: "К вашему аккаунту не привязано ни одной лампы!"
+                    handle: Rectangle {
+                        x: control2.leftPadding + control2.visualPosition * (control2.availableWidth - width)
+                        y: control2.topPadding + control2.availableHeight / 2 - height / 2
+                        implicitWidth: 20
+                        implicitHeight: 20
+                        radius: 13
+                        color: control2.pressed ? "#f0f0f0" : "#f6f6f6"
+                        border.color: "#EC7357"
                     }
                 }
             }
 
-            Item {
-                id: settingsTab
-
-                Button {
-                    id: authButton
-                    width: parent.width
-                    text: "Авторизоваться через Яндекс ID"
-
-                    onClicked: {
-                        yandexOAuth.grant();
-                    }
-                }
-
-                Item {
-                    id: accountData
-
-                    width: parent.width
-
-                    anchors.top: authButton.bottom
-                    anchors.topMargin: 10
-
-                    Rectangle {
-                        id: avatar
-                        anchors.horizontalCenter: parent.horizontalCenter
-
-                        width: 64
-                        height: 64
-
-                        color: "red"
-                        radius: 45
-                    }
-
-                    Text {
-                        id: name
-
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.top: avatar.bottom
-                        anchors.topMargin: 7
-
-                        text: "???"
-                    }
-
-                    Button {
-                        id: logoutButton
-                        width: parent.width
-                        text: "Выйти из аккаунта"
-
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.top: name.bottom
-                        anchors.topMargin: 7
-
-                        onClicked: {
-                            yandexOAuth.grant();
-                        }
-                    }
-
-                    Button {
-                        id: reloginButton
-                        width: parent.width
-                        text: "Сменить аккаунт"
-
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.top: logoutButton.bottom
-                        anchors.topMargin: 7
-
-                        onClicked: {
-                            yandexOAuth.grant();
-                        }
-                    }
-                }
-            }
+            model: lampsListModel
         }
     }
 }

@@ -9,6 +9,7 @@ SOURCES += \
         models/lampslistmodel.cpp \
         3rdparty/secrets.cpp \
         yandex/yandexaccount.cpp \
+        yandex/yandexdevice.cpp \
         yandex/yandexdevicedata.cpp \
         yandex/yandexhome.cpp \
         yandex/yandexlamp.cpp \
@@ -20,6 +21,7 @@ HEADERS += \
     models/lampslistmodel.h \
     3rdparty/secrets.h \
     yandex/yandexaccount.h \
+    yandex/yandexdevice.h \
     yandex/yandexdevicedata.h \
     yandex/yandexhome.h \
     yandex/yandexlamp.h \

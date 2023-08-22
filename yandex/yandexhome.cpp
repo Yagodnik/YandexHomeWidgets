@@ -8,7 +8,11 @@ YandexHome::YandexHome(QObject *parent)
 
 void YandexHome::getAllDevices(QVariant model)
 {
-    LampsListModel* lampsModel = qvariant_cast<LampsListModel*>(model);
+    LampsListModel* lampsModel = nullptr;
+
+    if (model.canConvert<LampsListModel*>())
+        lampsModel = qvariant_cast<LampsListModel*>(model);
+
     Secrets *secrets = Secrets::getInstance();
 
     QString requestUrl = "https://api.iot.yandex.net/v1.0/user/info";
@@ -47,7 +51,9 @@ void YandexHome::getAllDevices(QVariant model)
                 qDebug() << "No yandex devices!";
             }
 
-            lampsModel->add(lamps);
+            if (lampsModel != nullptr) {
+                lampsModel->add(lamps);
+            }
 
             // Pass devices to
             emit devicesLoaded(lamps.length());
@@ -57,6 +63,15 @@ void YandexHome::getAllDevices(QVariant model)
             emit devicesLoaded(-1);
         }
     });
+}
+
+void YandexHome::reloadInfo()
+{
+    foreach (YandexLamp *lamp, lamps) {
+//        qDebug() << lamp->getId();
+
+        lamp->getState();
+    }
 }
 
 void YandexHome::on(QString deviceId)

@@ -13,23 +13,24 @@
 #include "3rdparty/constants.h"
 #include "3rdparty/secrets.h"
 #include "yandex/yandexdevicedata.h"
+#include "yandexdevice.h"
 
 typedef enum {
     ON, OFF, UNKNOWN
 } LampState;
 
-class YandexLamp : public QObject
+class YandexLamp : public YandexDevice
 {
-    Q_OBJECT
 public:
     explicit YandexLamp(QString deviceId,
-                        QString deviceName,
-                        QObject *parent = nullptr);
+                        QString deviceName);
     ~YandexLamp();
 
-    LampState getState();
-    QString getId();
     YandexDeviceData *getDeviceData();
+    QString getId();
+
+    LampState getState();
+    int getBrightness();
 
     Q_INVOKABLE void on();
     Q_INVOKABLE void off();
@@ -38,19 +39,11 @@ public:
 
 private:
     LampState lampState;
-    QString deviceId;
-    QString deviceName;
-    QNetworkAccessManager *networkManager;
 
     QJsonObject generateRequest(QJsonObject action);
     QJsonObject generateAction(LampState lampState);
     QJsonObject generateAction(int brightness);
     QJsonObject generateAction(QRgb color);
-
-    void sendPostRequest(QByteArray data);
-
-private slots:
-    void onReply(QNetworkReply *reply);
 };
 
 #endif // YANDEXLAMP_H

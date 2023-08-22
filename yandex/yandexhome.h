@@ -17,7 +17,11 @@ class YandexHome : public QObject
 public:
     explicit YandexHome(QObject *parent = nullptr);
 
+    // Sends api request for all devices
     Q_INVOKABLE void getAllDevices(QVariant model);
+
+    // Reloads info about devices that are already saved in the list (lamps)
+    Q_INVOKABLE void reloadInfo();
 
     Q_INVOKABLE void on(QString deviceId);
     Q_INVOKABLE void off(QString deviceId);
@@ -32,7 +36,6 @@ private:
     QNetworkAccessManager *networkAccessManager;
 
     YandexLamp *withId(QString id);
-
 };
 
 #endif // YANDEXHOME_H

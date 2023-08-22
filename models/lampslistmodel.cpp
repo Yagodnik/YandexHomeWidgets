@@ -41,11 +41,6 @@ QHash<int, QByteArray> LampsListModel::roleNames() const
     return roles;
 }
 
-void LampsListModel::reload()
-{
-
-}
-
 void LampsListModel::add(QList<YandexLamp *> loadedLamps)
 {
     lamps.clear();

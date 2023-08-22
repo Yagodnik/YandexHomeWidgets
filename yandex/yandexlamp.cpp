@@ -1,16 +1,9 @@
 #include "yandexlamp.h"
 
 YandexLamp::YandexLamp(QString deviceId,
-                       QString deviceName,
-                       QObject *parent) : QObject(parent)
+                       QString deviceName) : YandexDevice(deviceId, deviceName, nullptr)
 {
-    this->deviceId = deviceId;
-    this->deviceName = deviceName;
     this->lampState = UNKNOWN;
-
-    networkManager = new QNetworkAccessManager(this);
-
-    connect(networkManager, &QNetworkAccessManager::finished, this, &YandexLamp::onReply);
 }
 
 YandexLamp::~YandexLamp()
@@ -20,18 +13,9 @@ YandexLamp::~YandexLamp()
 
 LampState YandexLamp::getState()
 {
-    Secrets *secrets = Secrets::getInstance();
+    QJsonObject capability = getCapability("devices.capabilities.on_off");
 
-    QUrl deviceUrl = QUrl("https://api.iot.yandex.net/v1.0/devices/" + deviceId);
-    QNetworkRequest request(deviceUrl);
-    QString authorizationHeader = "Bearer " + secrets->get(OAUTH_TOKEN_NAME);
-
-    request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
-    request.setRawHeader("Authorization", authorizationHeader.toLocal8Bit());
-
-    QNetworkReply *reply = networkManager->get(request);
-
-    Q_UNUSED(reply);
+    // Do some shit with it
 
     return UNKNOWN;
 }
@@ -171,36 +155,4 @@ QJsonObject YandexLamp::generateAction(QRgb color)
     action["state"] = state;
 
     return action;
-}
-
-void YandexLamp::sendPostRequest(QByteArray data)
-{
-    Secrets *secrets = Secrets::getInstance();
-
-    QTime time;
-
-    QUrl deviceUrl = QUrl("https://api.iot.yandex.net/v1.0/devices/actions");
-    QNetworkRequest request(deviceUrl);
-    QString authorizationHeader = "Bearer " + secrets->get(OAUTH_TOKEN_NAME);
-    QString hash = QString(QCryptographicHash::hash(time.currentTime().toString().toLocal8Bit(),
-                                                    QCryptographicHash::Md5).toHex());
-    request.setRawHeader("X-Request-Id", hash.toLocal8Bit());
-    request.setRawHeader("Authorization", authorizationHeader.toLocal8Bit());
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-
-    networkManager->post(request, data);
-}
-
-void YandexLamp::onReply(QNetworkReply *reply) {
-    if(reply->error() == QNetworkReply::NoError) {
-        QString content = reply->readAll();
-
-        QJsonDocument jsonResponse = QJsonDocument::fromJson(content.toUtf8());
-        QJsonObject jsonObject = jsonResponse.object();
-
-    } else {
-        qDebug() << reply->errorString();
-    }
-
-    reply->deleteLater();
 }

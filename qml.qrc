@@ -4,9 +4,13 @@
         <file>assets/icon.png</file>
         <file>assets/lamp_off.png</file>
         <file>assets/lamp_on.png</file>
-        <file>components/LampControl.qml</file>
-        <file>components/LampColor.qml</file>
         <file>assets/colors.json</file>
         <file>assets/secrets.json</file>
+        <file>assets/test.svg</file>
+        <file>circularSlider/CircularSlider.qml</file>
+        <file>assets/Montserrat-SemiBold.ttf</file>
+        <file>assets/icons8-logout-24.png</file>
+        <file>assets/logout.png</file>
+        <file>assets/lamp.png</file>
     </qresource>
 </RCC>
