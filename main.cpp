@@ -22,28 +22,32 @@ int main(int argc, char *argv[])
 #endif
     QGuiApplication app(argc, argv);
 
-    YandexAccount account;
-    YandexOAuth oauth;
-    YandexHome home;
-    Colors lampColors;
-    LampsListModel lampsListModel;
+//    YandexAccount account;
+//    YandexOAuth oauth;
+//    YandexHome home;
+//    Colors lampColors;
+//    LampsListModel lampsListModel;
 
-    home.getAllDevices(QVariant());
+//    home.getAllDevices(QVariant());
 
-    QObject::connect(&home, &YandexHome::devicesLoaded, [&home](int result) {
-        home.reloadInfo();
-    });
+//    QObject::connect(&home, &YandexHome::devicesLoaded, [&home](int result) {
+//        home.reloadInfo();
+//    });
 
-    return app.exec();
+//    return app.exec();
 
     QQmlApplicationEngine engine;
 
     QQmlContext *context = engine.rootContext();
-    context->setContextProperty("lampColors", &lampColors);
-    context->setContextProperty("lampsListModel", &lampsListModel);
-    context->setContextProperty("yandexHome", &home);
-    context->setContextProperty("yandexOAuth", &oauth);
-    context->setContextProperty("yandexAccount", &account);
+
+    qmlRegisterType<YandexHome>("Yandex", 1, 0, "YandexHome");
+    qmlRegisterType<LampsListModel>("Yandex", 1, 0, "DevicesModel");
+
+//    context->setContextProperty("lampColors", &lampColors);
+//    context->setContextProperty("lampsListModel", &lampsListModel);
+//    context->setContextProperty("yandexHome", &home);
+//    context->setContextProperty("yandexOAuth", &oauth);
+//    context->setContextProperty("yandexAccount", &account);
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

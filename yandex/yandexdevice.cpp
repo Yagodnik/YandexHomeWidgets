@@ -10,6 +10,16 @@ YandexDevice::YandexDevice(QString deviceId, QString deviceName, QObject *parent
     networkManager = new QNetworkAccessManager(this);
 }
 
+QString YandexDevice::getName()
+{
+    return deviceName;
+}
+
+QString YandexDevice::getId()
+{
+    return deviceId;
+}
+
 void YandexDevice::sendPostRequest(QByteArray data)
 {
     Secrets *secrets = Secrets::getInstance();
@@ -41,6 +51,8 @@ QJsonObject YandexDevice::getCapability(QString targetCapability)
 
     QNetworkReply *reply = networkManager->get(request);
 
+    temp = QJsonObject();
+
     connect(reply, &QNetworkReply::finished, [=]() {
         if (reply->error() == QNetworkReply::NoError) {
             QByteArray response = reply->readAll();
@@ -53,14 +65,17 @@ QJsonObject YandexDevice::getCapability(QString targetCapability)
                 QJsonObject capability = ref.toObject();
 
                 if (capability["type"] == targetCapability) {
-                    qDebug() << capability;
+                    temp = capability;
+//                    qDebug() << "Before:" << temp;
                     break;
                 }
             }
         } else {
-            qDebug() << "Error with device" << deviceId << "cant get capabilities!";
+//            qDebug() << "Error with device" << deviceId << "cant get capabilities!";
         }
     });
 
-    return QJsonObject();
+//    qDebug() << "After:" << temp;
+
+    return temp;
 }

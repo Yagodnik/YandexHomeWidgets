@@ -18,6 +18,11 @@ class YandexDevice : public QObject
 public:
     explicit YandexDevice(QString deviceId, QString deviceName, QObject *parent = nullptr);
 
+    QString getName();
+    QString getId();
+
+    virtual void reload() = 0;
+
 protected:
     QString deviceId;
     QString deviceName;
@@ -25,6 +30,8 @@ protected:
 
     void sendPostRequest(QByteArray data);
     QJsonObject getCapability(QString targetCapability);
+
+    QJsonObject temp;
 };
 
 #endif // YANDEXDEVICE_H

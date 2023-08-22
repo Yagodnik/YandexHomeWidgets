@@ -3,19 +3,11 @@
 
 #include <QString>
 
-class YandexDeviceData
-{
-public:
-    explicit YandexDeviceData(const QString id,
-                              const QString name);
-
-    QString getId();
-    QString getName();
-
-private:
-    const QString id;
-    const QString name;
-};
-
+typedef struct {
+    QString id;
+    QString name;
+    bool state;
+    int brightness;
+} YandexDeviceData;
 
 #endif // YANDEXDEVICEDATA_H

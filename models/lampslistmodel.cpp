@@ -24,9 +24,13 @@ QVariant LampsListModel::data(const QModelIndex &index, int role) const
 
     switch (role) {
     case IdRole:
-        return lamps.at(index.row())->getId();
+        return lamps.at(index.row())->id;
     case TextRole:
-        return lamps.at(index.row())->getName();
+        return lamps.at(index.row())->name;
+    case StateRole:
+        return lamps.at(index.row())->state;
+    case BrightnessRole:
+        return lamps.at(index.row())->brightness;
     default:
         return QVariant();
     }
@@ -37,6 +41,8 @@ QHash<int, QByteArray> LampsListModel::roleNames() const
     QHash<int, QByteArray> roles = QAbstractListModel::roleNames();
     roles[TextRole] = "deviceName";
     roles[IdRole] = "deviceId";
+    roles[StateRole] = "deviceState";
+    roles[BrightnessRole] = "deviceBrightness";
 
     return roles;
 }
@@ -53,4 +59,17 @@ void LampsListModel::add(QList<YandexLamp *> loadedLamps)
 
     emit layoutChanged();
 }
+
+void LampsListModel::update(QString id, YandexLamp *lamp)
+{
+    for (int i = 0;i < lamps.length();i++) {
+        YandexDeviceData *data = lamps.at(i);
+
+        if (data->id == id) {
+            lamps.replace(i, lamp->getDeviceData());
+            emit layoutChanged();
+        }
+    }
+}
+
 

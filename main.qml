@@ -7,6 +7,8 @@ import Qt.labs.settings
 import QtQuick.Shapes 1.5
 //import "./components/"
 import "./circularSlider"
+import Yandex 1.0
+import QtQml
 
 Window {
     id: window
@@ -17,6 +19,19 @@ Window {
     flags: Qt.FramelessWindowHint
     color: "transparent"
 
+    DevicesModel {
+        id: devicesModel
+    }
+
+    YandexHome {
+        id: yandexHome
+        devicesModel: devicesModel
+
+        Component.onCompleted: {
+            loadDevices();
+        }
+    }
+
     FontLoader {
         id: textFont
         source: "qrc:/assets/Montserrat-SemiBold.ttf"
@@ -26,80 +41,29 @@ Window {
         color: "#E8E9EB"
         radius: 20
         anchors.fill: parent
-    }
+    }  
 
-    function startupCheck() {
-        yandexAccount.askInfo();
+    onVisibleChanged: {
+        if (!visible) {
+            visible = true;
+        }
 
-        yandexHome.getAllDevices(lampsListModel);
-
-        accountData.enabled = true;
-    }
-
-    Component.onCompleted: {
-        startupCheck();
-    }
-
-    onActiveFocusItemChanged: {
-        if (!activeFocusItem) {
-            visible = false;
+        if (visible) {
+            yandexHome.updateDevices();
         }
     }
 
-    Connections {
-        target: yandexHome
+//    Connections {
+//        target: yandexOAuth
 
-        function onDevicesLoaded(result) {
-            if (result < 0) {
-                trayIcon.showMessage("Нет инета", "Брат, инета нема (╯╭╮╰)");
-                lampTab.enabled = false;
-            } else if (result === 0) {
-                trayIcon.showMessage("Нет ламп", "Брат, ламп нема (╯╭╮╰)");
-                lampTab.enabled = false;
-            } else {
-                lampTab.enabled = true;
+//        function onGranted() {
+//            console.log("Authorized with: " + yandexOAuth.getToken())
 
-                // Generating list of lamps
-            }
-        }
-
-        function onLampError(deviceId) {
-            trayIcon.showMessage("Ошибка!", "Не удалось отправить запрос лампочке!");
-        }
-    }
-
-    Connections {
-        target: yandexOAuth
-
-        function onGranted() {
-            console.log("Authorized with: " + yandexOAuth.getToken())
-
-            yandexOAuth.saveToken(yandexOAuth.getToken());
-            startupCheck();
-            trayIcon.showMessage("Вы авторизовались в аккаунт!", "Успех крч");
-        }
-    }
-
-    Connections {
-        target: yandexAccount
-
-        function onInfoReady() {
-            name.text = yandexAccount.getName();
-
-            authButton.enabled = false;
-            logoutButton.enabled = true;
-            reloginButton.enabled = true;
-        }
-
-        function onError() {
-            trayIcon.showMessage("Ошибка", "Не удалось войти в аккаунт!");
-//            accountData.enabled = false;
-
-            authButton.enabled = true;
-            logoutButton.enabled = false;
-            reloginButton.enabled = false;
-        }
-    }
+//            yandexOAuth.saveToken(yandexOAuth.getToken());
+//            startupCheck();
+//            trayIcon.showMessage("Вы авторизовались в аккаунт!", "Успех крч");
+//        }
+//    }
 
     SystemTrayIcon {
         id: trayIcon
@@ -188,7 +152,7 @@ Window {
         }
 
         GridView {
-            id: grid
+            id: devicesGrid
 
             anchors.top: appbar.bottom
             anchors.left: parent.left
@@ -200,9 +164,10 @@ Window {
             cellWidth: parent.width
             cellHeight: 160
 
+            model: devicesModel
             delegate: Item {
-                width: grid.cellWidth - 4
-                height: grid.cellHeight - 4
+                width: devicesGrid.cellWidth - 4
+                height: devicesGrid.cellHeight - 4
 
                 Rectangle {
                     anchors.fill: parent
@@ -248,7 +213,9 @@ Window {
 
 
                 Switch {
-                    id: control
+                    id: toggleControl
+
+                    checked: deviceState
 
                     anchors.top: parent.top
                     anchors.right: parent.right
@@ -259,30 +226,34 @@ Window {
                     indicator: Rectangle {
                         implicitWidth: 40
                         implicitHeight: 20
-                        x: control.leftPadding
+                        x: toggleControl.leftPadding
                         y: parent.height / 2 - height / 2
                         radius: 13
-                        color: control.checked ? "#EC7357" : "#ffffff"
-                        border.color: control.checked ? "#EC7357" : "#cccccc"
+                        color: toggleControl.checked ? "#EC7357" : "#ffffff"
+                        border.color: toggleControl.checked ? "#EC7357" : "#cccccc"
 
                         Rectangle {
-                            x: control.checked ? parent.width - width : 0
+                            x: toggleControl.checked ? parent.width - width : 0
                             width: 20
                             height: 20
                             radius: 13
-                            color: control.down ? "#cccccc" : "#ffffff"
-                            border.color: control.checked ? (control.down ? "#EC7357" : "#EC7357") : "#999999"
+                            color: toggleControl.down ? "#cccccc" : "#ffffff"
+                            border.color: toggleControl.checked ? (toggleControl.down ? "#EC7357" : "#EC7357") : "#999999"
                         }
+                    }
+
+                    onCheckedChanged: {
+                        yandexHome.setState(deviceId, checked);
                     }
                 }
 
                 Slider {
-                    id: control2
+                    id: brightnessControl
 
-                    value: 0.5
+                    value: deviceBrightness / 100
                     live: false
 
-                    anchors.top: control.bottom
+                    anchors.top: toggleControl.bottom
                     anchors.topMargin: 4
 
                     anchors.left: parent.left
@@ -291,18 +262,18 @@ Window {
                     anchors.rightMargin: 4
 
                     background: Rectangle {
-                        x: control2.leftPadding
-                        y: control2.topPadding + control2.availableHeight / 2 - height / 2
+                        x: brightnessControl.leftPadding
+                        y: brightnessControl.topPadding + brightnessControl.availableHeight / 2 - height / 2
                         implicitWidth: 200
                         implicitHeight: 20
-                        width: control2.availableWidth
+                        width: brightnessControl.availableWidth
                         height: implicitHeight
                         radius: 13
                         color: "#E8E9EB"
 
                         Flickable {
                             clip: true
-                            width: control2.visualPosition * parent.width
+                            width: brightnessControl.visualPosition * parent.width
                             height: parent.height
 
                             Rectangle {
@@ -315,18 +286,20 @@ Window {
                     }
 
                     handle: Rectangle {
-                        x: control2.leftPadding + control2.visualPosition * (control2.availableWidth - width)
-                        y: control2.topPadding + control2.availableHeight / 2 - height / 2
+                        x: brightnessControl.leftPadding + brightnessControl.visualPosition * (brightnessControl.availableWidth - width)
+                        y: brightnessControl.topPadding + brightnessControl.availableHeight / 2 - height / 2
                         implicitWidth: 20
                         implicitHeight: 20
                         radius: 13
-                        color: control2.pressed ? "#f0f0f0" : "#f6f6f6"
+                        color: brightnessControl.pressed ? "#f0f0f0" : "#f6f6f6"
                         border.color: "#EC7357"
+                    }
+
+                    onValueChanged: {
+//                        console.log(deviceBrightness)
                     }
                 }
             }
-
-            model: lampsListModel
         }
     }
 }

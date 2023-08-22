@@ -3,7 +3,7 @@
 YandexLamp::YandexLamp(QString deviceId,
                        QString deviceName) : YandexDevice(deviceId, deviceName, nullptr)
 {
-    this->lampState = UNKNOWN;
+    test = 70;
 }
 
 YandexLamp::~YandexLamp()
@@ -11,39 +11,35 @@ YandexLamp::~YandexLamp()
     networkManager->deleteLater();
 }
 
-LampState YandexLamp::getState()
+YandexDeviceData *YandexLamp::getDeviceData()
+{
+    return new YandexDeviceData {
+        .id =  deviceId,
+        .name = deviceName,
+        .state = getState(),
+        .brightness = getBrightness()
+    };
+}
+
+bool YandexLamp::getState()
 {
     QJsonObject capability = getCapability("devices.capabilities.on_off");
 
-    // Do some shit with it
+    if (capability.empty())
+        return false;
 
-    return UNKNOWN;
+    QJsonObject state = capability["state"].toObject();
+    return state["value"].toBool();
 }
 
-QString YandexLamp::getId()
+int YandexLamp::getBrightness()
 {
-    return deviceId;
+    return test;
 }
 
-YandexDeviceData *YandexLamp::getDeviceData()
+void YandexLamp::setState(bool state)
 {
-    return new YandexDeviceData(
-        deviceId, deviceName
-    );
-}
-
-void YandexLamp::on()
-{
-    QJsonObject action = generateAction(LampState::ON);
-    QJsonObject baseRequest = generateRequest(action);
-
-    QJsonDocument document(baseRequest);
-    sendPostRequest(document.toJson());
-}
-
-void YandexLamp::off()
-{
-    QJsonObject action = generateAction(LampState::OFF);
+    QJsonObject action = generateAction(state);
     QJsonObject baseRequest = generateRequest(action);
 
     QJsonDocument document(baseRequest);
@@ -54,6 +50,8 @@ void YandexLamp::setBrightness(int brightness)
 {
     QJsonObject action = generateAction(brightness);
     QJsonObject baseRequest = generateRequest(action);
+
+    test = 100;
 
     QJsonDocument document(baseRequest);
     sendPostRequest(document.toJson());
@@ -89,23 +87,15 @@ QJsonObject YandexLamp::generateRequest(QJsonObject action)
     return root;
 }
 
-QJsonObject YandexLamp::generateAction(LampState lampState)
+QJsonObject YandexLamp::generateAction(bool lampState)
 {
     QJsonObject action;
     action["type"] = "devices.capabilities.on_off";
 
     QJsonObject state;
 
-    if (lampState == ON) {
-        state["instance"] = "on";
-        state["value"] = true;
-    } else if (lampState == OFF) {
-        state["instance"] = "on";
-        state["value"] = false;
-    } else {
-        qDebug() << "Error";
-        return QJsonObject();
-    }
+    state["instance"] = "on";
+    state["value"] = lampState;
 
     action["state"] = state;
 

@@ -10,7 +10,6 @@ SOURCES += \
         3rdparty/secrets.cpp \
         yandex/yandexaccount.cpp \
         yandex/yandexdevice.cpp \
-        yandex/yandexdevicedata.cpp \
         yandex/yandexhome.cpp \
         yandex/yandexlamp.cpp \
         yandex/yandexoauth.cpp

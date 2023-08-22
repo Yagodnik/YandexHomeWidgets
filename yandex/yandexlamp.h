@@ -15,10 +15,6 @@
 #include "yandex/yandexdevicedata.h"
 #include "yandexdevice.h"
 
-typedef enum {
-    ON, OFF, UNKNOWN
-} LampState;
-
 class YandexLamp : public YandexDevice
 {
 public:
@@ -27,23 +23,27 @@ public:
     ~YandexLamp();
 
     YandexDeviceData *getDeviceData();
-    QString getId();
 
-    LampState getState();
+    bool getState();
     int getBrightness();
 
-    Q_INVOKABLE void on();
-    Q_INVOKABLE void off();
-    Q_INVOKABLE void setBrightness(int brightness);
-    Q_INVOKABLE void setColor(QRgb color);
+    void setState(bool state);
+    void setBrightness(int brightness);
+    void setColor(QRgb color);
 
+    int test;
 private:
-    LampState lampState;
-
     QJsonObject generateRequest(QJsonObject action);
-    QJsonObject generateAction(LampState lampState);
+    QJsonObject generateAction(bool lampState);
     QJsonObject generateAction(int brightness);
     QJsonObject generateAction(QRgb color);
+
+
+    // YandexDevice interface
+public:
+    void reload() {
+
+    }
 };
 
 #endif // YANDEXLAMP_H

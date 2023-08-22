@@ -14,6 +14,8 @@ class LampsListModel : public QAbstractListModel
 public:
     enum Roles {
         TextRole = Qt::UserRole + 1,
+        StateRole = Qt::UserRole + 2,
+        BrightnessRole = Qt::UserRole + 3,
         IdRole
     };
 
@@ -25,6 +27,7 @@ public:
     QHash<int, QByteArray> roleNames() const;
 
     void add(QList<YandexLamp*> loadedLamps);
+    void update(QString id, YandexLamp *lamp);
 
 private:
     QList<YandexDeviceData*> lamps;

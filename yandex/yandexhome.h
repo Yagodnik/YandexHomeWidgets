@@ -14,18 +14,17 @@
 class YandexHome : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QVariant devicesModel WRITE setModel)
 public:
     explicit YandexHome(QObject *parent = nullptr);
 
-    // Sends api request for all devices
-    Q_INVOKABLE void getAllDevices(QVariant model);
+    Q_INVOKABLE void loadDevices();
+    Q_INVOKABLE void updateDevices();
 
-    // Reloads info about devices that are already saved in the list (lamps)
-    Q_INVOKABLE void reloadInfo();
-
-    Q_INVOKABLE void on(QString deviceId);
-    Q_INVOKABLE void off(QString deviceId);
+    Q_INVOKABLE void setState(QString deviceId, bool state);
     Q_INVOKABLE void setBrightness(QString deviceId, int brightness);
+
+    void setModel(QVariant model);
 
 signals:
     void devicesLoaded(int result);
@@ -34,6 +33,7 @@ signals:
 private:
     QList<YandexLamp*> lamps;
     QNetworkAccessManager *networkAccessManager;
+    LampsListModel *model;
 
     YandexLamp *withId(QString id);
 };

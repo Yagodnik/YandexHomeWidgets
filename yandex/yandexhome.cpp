@@ -6,13 +6,8 @@ YandexHome::YandexHome(QObject *parent)
     networkAccessManager = new QNetworkAccessManager(this);
 }
 
-void YandexHome::getAllDevices(QVariant model)
+void YandexHome::loadDevices()
 {
-    LampsListModel* lampsModel = nullptr;
-
-    if (model.canConvert<LampsListModel*>())
-        lampsModel = qvariant_cast<LampsListModel*>(model);
-
     Secrets *secrets = Secrets::getInstance();
 
     QString requestUrl = "https://api.iot.yandex.net/v1.0/user/info";
@@ -33,6 +28,7 @@ void YandexHome::getAllDevices(QVariant model)
 
             QJsonArray devices = jsonObject["devices"].toArray();
 
+            // TODO: Replace with foreach
             for (int i = 0;i < devices.count();i++) {
                 QJsonObject currentDevice = devices.at(i).toObject();
                 QString deviceType = currentDevice["type"].toString();
@@ -51,8 +47,8 @@ void YandexHome::getAllDevices(QVariant model)
                 qDebug() << "No yandex devices!";
             }
 
-            if (lampsModel != nullptr) {
-                lampsModel->add(lamps);
+            if (model != nullptr) {
+                model->add(lamps);
             }
 
             // Pass devices to
@@ -65,16 +61,15 @@ void YandexHome::getAllDevices(QVariant model)
     });
 }
 
-void YandexHome::reloadInfo()
+void YandexHome::updateDevices()
 {
     foreach (YandexLamp *lamp, lamps) {
-//        qDebug() << lamp->getId();
-
-        lamp->getState();
+        lamp->test = 20;
+        model->update(lamp->getId(), lamp);
     }
 }
 
-void YandexHome::on(QString deviceId)
+void YandexHome::setState(QString deviceId, bool state)
 {
     YandexLamp *lamp = withId(deviceId);
     if (lamp == nullptr) {
@@ -82,18 +77,7 @@ void YandexHome::on(QString deviceId)
         return;
     }
 
-    lamp->on();
-}
-
-void YandexHome::off(QString deviceId)
-{
-    YandexLamp *lamp = withId(deviceId);
-    if (lamp == nullptr) {
-        emit lampError(deviceId);
-        return;
-    }
-
-    lamp->off();
+    lamp->setState(state);
 }
 
 void YandexHome::setBrightness(QString deviceId, int brightness)
@@ -105,6 +89,16 @@ void YandexHome::setBrightness(QString deviceId, int brightness)
     }
 
     lamp->setBrightness(brightness);
+    model->update(deviceId, lamp);
+}
+
+void YandexHome::setModel(QVariant model)
+{
+    if (model.canConvert<LampsListModel*>()) {
+        this->model = qvariant_cast<LampsListModel*>(model);
+    } else {
+        qDebug() << "Cant cast model for YandexHome!";
+    }
 }
 
 YandexLamp *YandexHome::withId(QString id)
