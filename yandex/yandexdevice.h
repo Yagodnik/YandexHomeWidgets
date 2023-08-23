@@ -21,7 +21,7 @@ public:
     QString getName();
     QString getId();
 
-    virtual void reload() = 0;
+    virtual void update() = 0;
 
 protected:
     QString deviceId;
@@ -29,9 +29,10 @@ protected:
     QNetworkAccessManager *networkManager;
 
     void sendPostRequest(QByteArray data);
-    QJsonObject getCapability(QString targetCapability);
+    void getCapability(QString targetCapability);
 
-    QJsonObject temp;
+signals:
+    void getCapabilitySignal(QString capabilityName, QJsonObject capability);
 };
 
 #endif // YANDEXDEVICE_H

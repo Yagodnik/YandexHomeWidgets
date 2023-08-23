@@ -9,12 +9,11 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include "yandex/yandexlamp.h"
-#include "models/lampslistmodel.h"
+#include "yandex/yandexdevices.h"
 
 class YandexHome : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QVariant devicesModel WRITE setModel)
 public:
     explicit YandexHome(QObject *parent = nullptr);
 
@@ -29,13 +28,12 @@ public:
 signals:
     void devicesLoaded(int result);
     void lampError(QString deviceId);
+    void devicesUpdated();
 
 private:
-    QList<YandexLamp*> lamps;
-    QNetworkAccessManager *networkAccessManager;
-    LampsListModel *model;
+    YandexDevices *devices;
 
-    YandexLamp *withId(QString id);
+    QNetworkAccessManager *networkAccessManager;
 };
 
 #endif // YANDEXHOME_H

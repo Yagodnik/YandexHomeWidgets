@@ -25,7 +25,6 @@ Window {
 
     YandexHome {
         id: yandexHome
-        devicesModel: devicesModel
 
         Component.onCompleted: {
             loadDevices();
@@ -43,13 +42,11 @@ Window {
         anchors.fill: parent
     }  
 
-    onVisibleChanged: {
-        if (!visible) {
-            visible = true;
-        }
+    onActiveChanged: {
+        yandexHome.updateDevices();
 
-        if (visible) {
-            yandexHome.updateDevices();
+        if (!active) {
+            window.hide();
         }
     }
 
@@ -71,6 +68,8 @@ Window {
         icon.source: "qrc:/assets/icon.png"
 
         onActivated: {
+            yandexHome.updateDevices();
+
             window.x = Screen.desktopAvailableWidth - 20 - width + Screen.virtualX
             window.y = Screen.desktopAvailableHeight - 5 - height + Screen.virtualY
 
@@ -240,10 +239,15 @@ Window {
                             color: toggleControl.down ? "#cccccc" : "#ffffff"
                             border.color: toggleControl.checked ? (toggleControl.down ? "#EC7357" : "#EC7357") : "#999999"
                         }
-                    }
 
-                    onCheckedChanged: {
-                        yandexHome.setState(deviceId, checked);
+                        MouseArea {
+                            anchors.fill: parent
+
+                            onClicked: {
+                                toggleControl.checked = !toggleControl.checked;
+                                yandexHome.setState(deviceId, toggleControl.checked);
+                            }
+                        }
                     }
                 }
 

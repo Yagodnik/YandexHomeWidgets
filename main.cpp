@@ -24,17 +24,7 @@ int main(int argc, char *argv[])
 
 //    YandexAccount account;
 //    YandexOAuth oauth;
-//    YandexHome home;
 //    Colors lampColors;
-//    LampsListModel lampsListModel;
-
-//    home.getAllDevices(QVariant());
-
-//    QObject::connect(&home, &YandexHome::devicesLoaded, [&home](int result) {
-//        home.reloadInfo();
-//    });
-
-//    return app.exec();
 
     QQmlApplicationEngine engine;
 
@@ -44,8 +34,6 @@ int main(int argc, char *argv[])
     qmlRegisterType<LampsListModel>("Yandex", 1, 0, "DevicesModel");
 
 //    context->setContextProperty("lampColors", &lampColors);
-//    context->setContextProperty("lampsListModel", &lampsListModel);
-//    context->setContextProperty("yandexHome", &home);
 //    context->setContextProperty("yandexOAuth", &oauth);
 //    context->setContextProperty("yandexAccount", &account);
 

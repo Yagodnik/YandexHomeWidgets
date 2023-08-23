@@ -3,7 +3,7 @@
 YandexLamp::YandexLamp(QString deviceId,
                        QString deviceName) : YandexDevice(deviceId, deviceName, nullptr)
 {
-    test = 70;
+    connect(this, &YandexLamp::getCapabilitySignal, this, &YandexLamp::gotCapability);
 }
 
 YandexLamp::~YandexLamp()
@@ -21,20 +21,19 @@ YandexDeviceData *YandexLamp::getDeviceData()
     };
 }
 
+void YandexLamp::update()
+{
+    getCapability("devices.capabilities.on_off");
+}
+
 bool YandexLamp::getState()
 {
-    QJsonObject capability = getCapability("devices.capabilities.on_off");
-
-    if (capability.empty())
-        return false;
-
-    QJsonObject state = capability["state"].toObject();
-    return state["value"].toBool();
+    return state;
 }
 
 int YandexLamp::getBrightness()
 {
-    return test;
+    return brightness;
 }
 
 void YandexLamp::setState(bool state)
@@ -50,8 +49,6 @@ void YandexLamp::setBrightness(int brightness)
 {
     QJsonObject action = generateAction(brightness);
     QJsonObject baseRequest = generateRequest(action);
-
-    test = 100;
 
     QJsonDocument document(baseRequest);
     sendPostRequest(document.toJson());
@@ -145,4 +142,15 @@ QJsonObject YandexLamp::generateAction(QRgb color)
     action["state"] = state;
 
     return action;
+}
+
+void YandexLamp::gotCapability(QString capabilityName, QJsonObject capability)
+{
+    if (capabilityName == "devices.capabilities.on_off") {
+        if (capability.empty())
+            return;
+
+        QJsonObject state = capability["state"].toObject();
+        this->state = state["value"].toBool();
+    }
 }

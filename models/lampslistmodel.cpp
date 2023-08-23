@@ -3,34 +3,42 @@
 LampsListModel::LampsListModel(QObject *parent)
 {
     Q_UNUSED(parent);
+
+    devices = YandexDevices::getInstance();
+
+    connect(devices, &::YandexDevices::deviceAdded, this, &LampsListModel::deviceAdded);
+    connect(devices, &::YandexDevices::devicesUpdated, this, &LampsListModel::devicesUpdated);
 }
 
 LampsListModel::~LampsListModel()
 {
-    lamps.clear();
+    devices->clear();
 }
 
 int LampsListModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
 
-    return lamps.count();
+    return devices->count();
 }
 
 QVariant LampsListModel::data(const QModelIndex &index, int role) const
 {
-    if (lamps.isEmpty())
+    if (devices->isEmpty())
         return QVariant();
+
+    YandexLamp *lamp = (YandexLamp*) devices->at(index.row());
+    YandexDeviceData *data = lamp->getDeviceData();
 
     switch (role) {
     case IdRole:
-        return lamps.at(index.row())->id;
+        return data->id;
     case TextRole:
-        return lamps.at(index.row())->name;
+        return data->name;
     case StateRole:
-        return lamps.at(index.row())->state;
+        return data->state;
     case BrightnessRole:
-        return lamps.at(index.row())->brightness;
+        return data->brightness;
     default:
         return QVariant();
     }
@@ -39,6 +47,7 @@ QVariant LampsListModel::data(const QModelIndex &index, int role) const
 QHash<int, QByteArray> LampsListModel::roleNames() const
 {
     QHash<int, QByteArray> roles = QAbstractListModel::roleNames();
+
     roles[TextRole] = "deviceName";
     roles[IdRole] = "deviceId";
     roles[StateRole] = "deviceState";
@@ -47,29 +56,12 @@ QHash<int, QByteArray> LampsListModel::roleNames() const
     return roles;
 }
 
-void LampsListModel::add(QList<YandexLamp *> loadedLamps)
+void LampsListModel::deviceAdded()
 {
-    lamps.clear();
-
-    foreach (YandexLamp *lamp, loadedLamps) {
-        YandexDeviceData *data = lamp->getDeviceData();
-
-        lamps.append(data);
-    }
-
     emit layoutChanged();
 }
 
-void LampsListModel::update(QString id, YandexLamp *lamp)
+void LampsListModel::devicesUpdated()
 {
-    for (int i = 0;i < lamps.length();i++) {
-        YandexDeviceData *data = lamps.at(i);
-
-        if (data->id == id) {
-            lamps.replace(i, lamp->getDeviceData());
-            emit layoutChanged();
-        }
-    }
+    emit layoutChanged();
 }
-
-

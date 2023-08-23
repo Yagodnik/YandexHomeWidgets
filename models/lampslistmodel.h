@@ -7,6 +7,7 @@
 #include <QStringList>
 #include "yandex/yandexlamp.h"
 #include "yandex/yandexdevicedata.h"
+#include "yandex/yandexdevices.h"
 
 class LampsListModel : public QAbstractListModel
 {
@@ -26,11 +27,12 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QHash<int, QByteArray> roleNames() const;
 
-    void add(QList<YandexLamp*> loadedLamps);
-    void update(QString id, YandexLamp *lamp);
-
 private:
-    QList<YandexDeviceData*> lamps;
+    YandexDevices *devices;
+
+private slots:
+    void deviceAdded();
+    void devicesUpdated();
 };
 
 Q_DECLARE_METATYPE(LampsListModel)

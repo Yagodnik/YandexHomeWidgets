@@ -38,7 +38,7 @@ void YandexDevice::sendPostRequest(QByteArray data)
     networkManager->post(request, data);
 }
 
-QJsonObject YandexDevice::getCapability(QString targetCapability)
+void YandexDevice::getCapability(QString targetCapability)
 {
     Secrets *secrets = Secrets::getInstance();
 
@@ -50,8 +50,6 @@ QJsonObject YandexDevice::getCapability(QString targetCapability)
     request.setRawHeader("Authorization", authorizationHeader.toLocal8Bit());
 
     QNetworkReply *reply = networkManager->get(request);
-
-    temp = QJsonObject();
 
     connect(reply, &QNetworkReply::finished, [=]() {
         if (reply->error() == QNetworkReply::NoError) {
@@ -65,17 +63,12 @@ QJsonObject YandexDevice::getCapability(QString targetCapability)
                 QJsonObject capability = ref.toObject();
 
                 if (capability["type"] == targetCapability) {
-                    temp = capability;
-//                    qDebug() << "Before:" << temp;
+                    emit getCapabilitySignal(targetCapability, capability);
                     break;
                 }
             }
         } else {
-//            qDebug() << "Error with device" << deviceId << "cant get capabilities!";
+            qDebug() << "Error with device" << deviceId << "cant get capabilities!";
         }
     });
-
-//    qDebug() << "After:" << temp;
-
-    return temp;
 }

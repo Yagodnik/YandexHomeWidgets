@@ -23,6 +23,7 @@ public:
     ~YandexLamp();
 
     YandexDeviceData *getDeviceData();
+    void update();
 
     bool getState();
     int getBrightness();
@@ -30,20 +31,17 @@ public:
     void setState(bool state);
     void setBrightness(int brightness);
     void setColor(QRgb color);
-
-    int test;
 private:
+    bool state;
+    int brightness;
+
     QJsonObject generateRequest(QJsonObject action);
     QJsonObject generateAction(bool lampState);
     QJsonObject generateAction(int brightness);
     QJsonObject generateAction(QRgb color);
 
-
-    // YandexDevice interface
-public:
-    void reload() {
-
-    }
+private slots:
+    void gotCapability(QString capabilityName, QJsonObject capability);
 };
 
 #endif // YANDEXLAMP_H
