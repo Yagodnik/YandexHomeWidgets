@@ -58,10 +58,10 @@ void YandexHome::loadDevices()
 
 void YandexHome::updateDevices()
 {
-    YandexLamp *lamp = (YandexLamp*) devices->at(0);
+//    YandexLamp *lamp = (YandexLamp*) devices->at(0);
 
-    lamp->update();
-    devices->update();
+//    lamp->update();
+//    devices->update();
 }
 
 void YandexHome::setState(QString deviceId, bool state)

@@ -7,10 +7,16 @@
         <file>assets/colors.json</file>
         <file>assets/secrets.json</file>
         <file>assets/test.svg</file>
-        <file>circularSlider/CircularSlider.qml</file>
         <file>assets/Montserrat-SemiBold.ttf</file>
         <file>assets/icons8-logout-24.png</file>
         <file>assets/logout.png</file>
         <file>assets/lamp.png</file>
+        <file>components/Panel.qml</file>
+        <file>components/Button.qml</file>
+        <file>components/Avatar.qml</file>
+        <file>components/Splitter.qml</file>
+        <file>assets/icons8-arrow-24.png</file>
+        <file>components/Switch.qml</file>
+        <file>components/Slider.qml</file>
     </qresource>
 </RCC>
