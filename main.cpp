@@ -2,12 +2,13 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include "models/lampslistmodel.h"
-#include "3rdparty/colors.h"
+#include "models/colorsmodel.h"
 #include <QtNetworkAuth>
 #include <QDesktopServices>
 #include "yandex/yandexoauth.h"
 #include "yandex/yandexhome.h"
 #include "yandex/yandexaccount.h"
+#include "3rdparty/desktopfeatures.h"
 
 // TODO: Fix bug with colors
 // TODO: Ask for current lamp state when focusing
@@ -22,9 +23,10 @@ int main(int argc, char *argv[])
 #endif
     QGuiApplication app(argc, argv);
 
-//    YandexAccount account;
-//    YandexOAuth oauth;
-//    Colors lampColors;
+    YandexAccount account;
+    YandexOAuth oauth;
+    ColorsModel colorModel;
+    DesktopFeatures desktopFeatures;
 
     QQmlApplicationEngine engine;
 
@@ -33,9 +35,10 @@ int main(int argc, char *argv[])
     qmlRegisterType<YandexHome>("Yandex", 1, 0, "YandexHome");
     qmlRegisterType<LampsListModel>("Yandex", 1, 0, "DevicesModel");
 
-//    context->setContextProperty("lampColors", &lampColors);
-//    context->setContextProperty("yandexOAuth", &oauth);
-//    context->setContextProperty("yandexAccount", &account);
+    context->setContextProperty("colorModel", &colorModel);
+    context->setContextProperty("yandexOAuth", &oauth);
+    context->setContextProperty("yandexAccount", &account);
+    context->setContextProperty("desktopFeatures", &desktopFeatures);
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

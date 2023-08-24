@@ -1,14 +1,11 @@
 import QtQuick
 import QtQuick.Window
-import QtQuick.Controls.Fusion
 import QtQuick.Layouts 1.12
 import Qt.labs.platform
 import Qt.labs.settings
-import QtQuick.Shapes 1.5
 import "./components/" as Components
+import "./pages" as Pages
 import Yandex 1.0
-import QtQml
-import Qt5Compat.GraphicalEffects
 
 Window {
     id: window
@@ -42,6 +39,10 @@ Window {
         radius: 3
     }
 
+    Component.onCompleted: {
+        yandexAccount.askInfo();
+    }
+
     onActiveChanged: {
         yandexHome.updateDevices();
 
@@ -50,28 +51,68 @@ Window {
         }
     }
 
-//    Connections {
-//        target: yandexOAuth
+    Connections {
+        target: yandexAccount
 
-//        function onGranted() {
-//            console.log("Authorized with: " + yandexOAuth.getToken())
+        function onInfoReady() {
+            home.setAccountData(
+                yandexAccount.getName(),
+                "https://avatars.yandex.net/get-yapic/" + yandexAccount.getAvatarId() + "/islands-middle"
+            );
 
-//            yandexOAuth.saveToken(yandexOAuth.getToken());
-//            startupCheck();
-//            trayIcon.showMessage("Вы авторизовались в аккаунт!", "Успех крч");
-//        }
-//    }
+            stack.currentIndex = 2;
+        }
+
+        function onError() {
+            stack.currentIndex = 1;
+
+            console.log("Error during log in");
+        }
+    }
+
+    Connections {
+        target: yandexOAuth
+
+        function onGranted() {
+            yandexOAuth.saveToken(yandexOAuth.getToken());
+            yandexAccount.askInfo();
+            yandexHome.loadDevices();
+
+            stack.currentIndex = 2;
+        }
+    }
 
     SystemTrayIcon {
         id: trayIcon
         visible: true
         icon.source: "qrc:/assets/icon.png"
 
-        onActivated: {
+        onActivated: function(reason) {
             yandexHome.updateDevices();
 
-            window.x = Screen.desktopAvailableWidth - 20 - width + Screen.virtualX
-            window.y = Screen.desktopAvailableHeight - 5 - height + Screen.virtualY
+            if (reason !== SystemTrayIcon.Trigger)
+                return;
+
+            const position = desktopFeatures.getTaskbarPosition();
+
+            const x0 = position.x;
+            const y0 = position.y;
+            const w = position.width;
+            const h = position.height;
+
+            if (y0 > 0 && x0 === 0) {
+                window.x = Screen.desktopAvailableWidth - 20 - width
+                window.y = Screen.desktopAvailableHeight - 5 - window.height
+            } else if (y0 === 0 && x0 === 0 && w < h) {
+                window.x = w + 5
+                window.y = Screen.desktopAvailableHeight - height - 50
+            } else if (y0 === 0 && x0 === 0 && h < w) {
+                window.x = Screen.desktopAvailableWidth - width + Screen.virtualX - 50
+                window.y = Screen.virtualY + h + 50
+            } else {
+                window.x = Screen.desktopAvailableWidth - width - 5
+                window.y = Screen.desktopAvailableHeight - height - 50
+            }
 
             if (!window.visible) {
                 window.show();
@@ -81,277 +122,36 @@ Window {
                 window.hide();
             }
         }
-    }
 
-    Item {
-        id: app
-        anchors.fill: parent
-        anchors.margins: 3
-
-        Components.Panel {
-            id: appbar
-
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.right: parent.right
-
-            height: 60
-
-            Components.Avatar {
-                id: icon
-
-                anchors.left: parent.left
-                anchors.leftMargin: 8
-                anchors.verticalCenter: parent.verticalCenter
-
-//                source: "https://avatars.mds.yandex.net/get-yapic/0/0-0/islands-retina-small"
-                source: "qrc:/assets/icon.png"
+        menu: Menu {
+            MenuItem {
+                text: qsTr("Закрыть окно")
+                onTriggered: Qt.quit()
             }
 
-            Text {
-                height: 32
-
-                color: "#1d1e1d"
-
-                anchors.left: icon.right
-                anchors.leftMargin: 8
-                anchors.verticalCenter: parent.verticalCenter
-
-                verticalAlignment: Text.AlignVCenter
-
-                font.family: textFont.font.family
-                font.weight: textFont.font.weight
-                font.pixelSize: 16
-
-                text: "Yandex Account"
-            }
-
-            Components.Button {
-                id: logoutButton
-
-                text: "Выйти"
-
-                width: 64
-                height: 28
-
-                anchors.right: parent.right
-                anchors.rightMargin: 10
-                anchors.verticalCenter: parent.verticalCenter
+            MenuItem {
+                text: qsTr("Github")
+                onTriggered: Qt.openUrlExternally("https://github.com/Yagodnik/YandexLampTray")
             }
         }
+    }
 
-        Components.Panel {
-            anchors.top: appbar.bottom
-            anchors.topMargin: 5
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
+    StackLayout {
+        id: stack
+        anchors.fill: parent
 
-            Item {
-                id: header
+        currentIndex: 0
 
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.topMargin: 5
-                anchors.leftMargin: 3
-                anchors.rightMargin: 3
-                height: 32
+        Pages.Loading {
+            id: loading
+        }
 
-                Text {
-                    color: "#1d1e1d"
+        Pages.Login {
+            id: login
+        }
 
-                    anchors.left: header.left
-                    anchors.leftMargin: 8
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    verticalAlignment: Text.AlignVCenter
-
-                    font.family: textFont.font.family
-                    font.weight: textFont.font.weight
-                    font.pixelSize: 16
-
-                    text: "Ваши девайсы"
-                }
-
-                Components.Button {
-                    id: updateButton
-
-                    text: "Обновить"
-
-                    width: 90
-                    height: 28
-
-                    anchors.right: parent.right
-                    anchors.rightMargin: 10
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-            }
-
-            Components.Splitter {
-                id: splitter
-                anchors.top: header.bottom
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.topMargin: 3
-                anchors.leftMargin: 12
-                anchors.rightMargin: 12
-            }
-
-            Item {
-                anchors.top: splitter.bottom
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.topMargin: 5
-                anchors.leftMargin: 12
-                anchors.rightMargin: 3
-                anchors.bottom: parent.bottom
-
-                GridView {
-                    id: devicesGrid
-
-                    anchors.fill: parent
-
-                    cellWidth: parent.width
-                    cellHeight: 140
-
-                    model: devicesModel
-                    delegate: Item {
-                        width: devicesGrid.cellWidth - 4
-                        height: devicesGrid.cellHeight - 4
-
-                        Rectangle {
-                            width: 3
-                            height: parent.height - 16
-                            anchors.verticalCenter: parent.verticalCenter
-                            color: "#00829e"
-                            radius: 3
-                        }
-
-                        Text {
-                            id: title
-                            color: "#1d1e1d"
-
-                            anchors.left: parent.left
-                            anchors.leftMargin: 12
-                            anchors.top: parent.top
-                            anchors.topMargin: 5
-
-                            verticalAlignment: Text.AlignVCenter
-
-                            font.family: textFont.font.family
-                            font.weight: textFont.font.weight
-                            font.pixelSize: 20
-
-                            text: deviceName
-                        }
-
-                        Components.Switch {
-                            id: onOff
-
-                            width: 45
-                            height: 22
-
-                            anchors.left: title.right
-                            anchors.leftMargin: 8
-                            anchors.top: parent.top
-                            anchors.topMargin: 6
-                        }
-
-                        Components.Slider {
-                            id: slider
-
-                            anchors.top: title.bottom
-                            anchors.topMargin: 8
-                            anchors.left: parent.left
-                            anchors.leftMargin: 12
-
-                            anchors.right: parent.right
-                            anchors.rightMargin: 5
-
-                            height: 5
-                        }
-
-                        GridView {
-                            id: colorsGrid
-                            interactive: false
-
-                            anchors.top: slider.bottom
-                            anchors.topMargin: 12
-                            anchors.bottom: parent.bottom
-                            anchors.left: parent.left
-                            anchors.leftMargin: 12
-                            anchors.right: parent.right
-                            anchors.rightMargin: 12
-
-                            cellWidth: 34
-                            cellHeight: 34
-
-                            delegate: Rectangle {
-                                id: delegate
-                                color: "red"
-                                width: colorsGrid.cellWidth - 4
-                                height: colorsGrid.cellHeight - 4
-
-                                radius: 3
-
-                                MouseArea {
-                                    anchors.fill: parent
-                                    hoverEnabled: true
-
-                                    onContainsMouseChanged: {
-                                        delegate.state === "hover" ? delegate.state = "noHover" : delegate.state = "hover";
-                                    }
-                                }
-
-                                states: [
-                                    State {
-                                        name: "noHover"
-
-                                        PropertyChanges {
-                                            target: delegate
-                                            radius: 5
-                                        }
-                                    },
-
-                                    State {
-                                        name: "hover"
-
-                                        PropertyChanges {
-                                            target: delegate
-                                            radius: 8
-                                        }
-                                    }
-                                ]
-
-                                transitions: Transition {
-                                    PropertyAnimation {
-                                        target: delegate
-                                        properties: "radius"
-                                        easing.type: Easing.InOutSine
-                                    }
-                                }
-                            }
-
-                            model: ListModel {
-                                ListElement {}
-                                ListElement {}
-                                ListElement {}
-                                ListElement {}
-                                ListElement {}
-                                ListElement {}
-                                ListElement {}
-                                ListElement {}
-                                ListElement {}
-                                ListElement {}
-                                ListElement {}
-                                ListElement {}
-                                ListElement {}
-                            }
-                        }
-                    }
-                }
-            }
+        Pages.Home {
+            id: home
         }
     }
 }

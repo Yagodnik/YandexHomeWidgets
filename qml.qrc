@@ -18,5 +18,9 @@
         <file>assets/icons8-arrow-24.png</file>
         <file>components/Switch.qml</file>
         <file>components/Slider.qml</file>
+        <file>components/ColorPicker.qml</file>
+        <file>pages/Loading.qml</file>
+        <file>pages/Login.qml</file>
+        <file>pages/Home.qml</file>
     </qresource>
 </RCC>

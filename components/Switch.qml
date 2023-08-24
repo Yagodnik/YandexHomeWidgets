@@ -3,6 +3,9 @@ import QtQuick 2.15
 Item {
     id: root
 
+    property bool value: false
+    signal clicked(bool value)
+
     Rectangle {
         id: background
         anchors.fill: parent
@@ -19,6 +22,8 @@ Item {
 
         onClicked: {
             root.state === "on" ? root.state = "off" : root.state = "on";
+            root.value = !value;
+            root.clicked(root.state === "on");
         }
     }
 

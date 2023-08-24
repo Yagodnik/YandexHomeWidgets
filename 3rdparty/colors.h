@@ -17,9 +17,9 @@ class Colors : public QObject
 public:
     explicit Colors(QObject *parent = nullptr);
 
-    Q_INVOKABLE QString getColorHex(int index);
-    Q_INVOKABLE QRgb getColorRgb(int index);
-    Q_INVOKABLE int getColorsCount();
+    QString getColorHex(int index);
+    QRgb getColorRgb(int index);
+    int getColorsCount();
 
 private:
     QList<QColor> colors;

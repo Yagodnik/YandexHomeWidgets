@@ -85,5 +85,8 @@ void YandexHome::setBrightness(QString deviceId, int brightness)
         return;
     }
 
+    if (brightness == 0)
+        brightness = 1;
+
     lamp->setBrightness(brightness);
 }

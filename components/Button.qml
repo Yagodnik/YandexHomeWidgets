@@ -5,6 +5,8 @@ Item {
     id: root
     property string text: "Text"
 
+    signal clicked
+
     Rectangle {
         id: background
         anchors.fill: parent
@@ -36,6 +38,10 @@ Item {
     MouseArea {
         anchors.fill: parent
         hoverEnabled: true
+
+        onClicked: {
+            root.clicked();
+        }
 
         onContainsMouseChanged: {
             if (containsMouse) {

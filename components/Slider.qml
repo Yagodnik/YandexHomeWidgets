@@ -3,6 +3,9 @@ import QtQuick 2.15
 Item {
     id: root
 
+    property real value: 0
+    signal newValue
+
     Rectangle {
         id: background
         anchors.fill: parent
@@ -52,6 +55,12 @@ Item {
             drag.axis: Drag.XAxis
             drag.minimumX: 0
             drag.maximumX: root.width - handle.width
+            drag.onActiveChanged: {
+                if (!drag.active) {
+                    root.value = (handle.x / drag.maximumX).toFixed(2);
+                    root.newValue();
+                }
+            }
         }
     }
 }
