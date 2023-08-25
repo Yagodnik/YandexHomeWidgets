@@ -3,6 +3,7 @@
 #include <QQmlContext>
 #include "models/lampslistmodel.h"
 #include "models/colorsmodel.h"
+#include "models/temperaturesmodel.h"
 #include <QtNetworkAuth>
 #include <QDesktopServices>
 #include "yandex/yandexoauth.h"
@@ -26,6 +27,7 @@ int main(int argc, char *argv[])
     YandexAccount account;
     YandexOAuth oauth;
     ColorsModel colorModel;
+    TemperaturesModel temperaturesModel;
     DesktopFeatures desktopFeatures;
 
     QQmlApplicationEngine engine;
@@ -36,6 +38,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<LampsListModel>("Yandex", 1, 0, "DevicesModel");
 
     context->setContextProperty("colorModel", &colorModel);
+    context->setContextProperty("temperaturesModel", &temperaturesModel);
     context->setContextProperty("yandexOAuth", &oauth);
     context->setContextProperty("yandexAccount", &account);
     context->setContextProperty("desktopFeatures", &desktopFeatures);

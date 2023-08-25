@@ -1,7 +1,7 @@
 import QtQuick 2.15
 
 GridView {
-    id: colorsGrid
+    id: root
     interactive: false
 
     cellWidth: 34
@@ -10,14 +10,18 @@ GridView {
     delegate: Rectangle {
         id: delegate
         color: colorValue
-        width: colorsGrid.cellWidth - 4
-        height: colorsGrid.cellHeight - 4
+        width: root.cellWidth - 4
+        height: root.cellHeight - 4
 
         radius: 3
 
         MouseArea {
             anchors.fill: parent
             hoverEnabled: true
+
+            onClicked: {
+                yandexHome.setColor(deviceId, colorValue);
+            }
 
             onContainsMouseChanged: {
                 delegate.state === "hover" ? delegate.state = "noHover" : delegate.state = "hover";
@@ -52,6 +56,4 @@ GridView {
             }
         }
     }
-
-    model: colorModel
 }

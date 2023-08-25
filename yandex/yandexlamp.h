@@ -18,6 +18,10 @@
 class YandexLamp : public YandexDevice
 {
 public:
+    typedef enum {
+        HSV, RGB, TEMPERATURES
+    } ColorModel;
+
     explicit YandexLamp(QString deviceId,
                         QString deviceName);
     ~YandexLamp();
@@ -31,9 +35,11 @@ public:
     void setState(bool state);
     void setBrightness(int brightness);
     void setColor(QRgb color);
+    void setTemperature(int temperature);
 private:
     bool state;
     int brightness;
+    ColorModel colorModel;
 
     QJsonObject generateRequest(QJsonObject action);
     QJsonObject generateAction(bool lampState);

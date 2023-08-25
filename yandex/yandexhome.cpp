@@ -90,3 +90,18 @@ void YandexHome::setBrightness(QString deviceId, int brightness)
 
     lamp->setBrightness(brightness);
 }
+
+void YandexHome::setColor(QString deviceId, QString color)
+{
+    qDebug() << "colors!";
+
+    YandexLamp *lamp = (YandexLamp*) devices->withId(deviceId);
+
+    if (lamp == nullptr) {
+        emit lampError(deviceId);
+        return;
+    }
+
+    QRgb _color = QColor(color).rgb();
+    lamp->setColor(_color);
+}

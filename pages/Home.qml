@@ -199,10 +199,27 @@ Item {
                     }
 
                     Components.ColorPicker {
-                        id: colorPicker
+                        id: temperaturePicker
+
+                        model: temperaturesModel
+
+                        height: 30
 
                         anchors.top: slider.bottom
                         anchors.topMargin: 12
+                        anchors.left: parent.left
+                        anchors.leftMargin: 12
+                        anchors.right: parent.right
+                        anchors.rightMargin: 12
+                    }
+
+                    Components.ColorPicker {
+                        id: colorPicker
+
+                        model: colorModel
+
+                        anchors.top: temperaturePicker.bottom
+                        anchors.topMargin: 5
                         anchors.bottom: parent.bottom
                         anchors.left: parent.left
                         anchors.leftMargin: 12

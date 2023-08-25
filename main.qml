@@ -139,6 +139,7 @@ Window {
     StackLayout {
         id: stack
         anchors.fill: parent
+        anchors.margins: 3
 
         currentIndex: 0
 

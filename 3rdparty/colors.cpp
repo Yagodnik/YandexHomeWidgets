@@ -21,9 +21,9 @@ Colors::Colors(QObject *parent) : QObject(parent)
         QJsonObject color = colorRef.toObject();
 
         colors.push_back(QColor(
-            color["r"].toInteger(),
-            color["g"].toInteger(),
-            color["b"].toInteger()
+            color["r"].toInt(),
+            color["g"].toInt(),
+            color["b"].toInt()
         ));
     }
 }

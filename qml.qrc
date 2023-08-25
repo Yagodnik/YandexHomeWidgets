@@ -22,5 +22,6 @@
         <file>pages/Loading.qml</file>
         <file>pages/Login.qml</file>
         <file>pages/Home.qml</file>
+        <file>assets/temperatures.json</file>
     </qresource>
 </RCC>

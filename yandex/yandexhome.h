@@ -22,6 +22,9 @@ public:
 
     Q_INVOKABLE void setState(QString deviceId, bool state);
     Q_INVOKABLE void setBrightness(QString deviceId, int brightness);
+    Q_INVOKABLE void setColor(QString deviceId, QString color);
+
+    Q_INVOKABLE void getSupportedColors(){}
 
     void setModel(QVariant model);
 

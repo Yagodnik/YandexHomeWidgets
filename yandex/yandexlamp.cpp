@@ -3,6 +3,8 @@
 YandexLamp::YandexLamp(QString deviceId,
                        QString deviceName) : YandexDevice(deviceId, deviceName, nullptr)
 {
+    // ASK BASIC INFO SUCH AS COLOR MODEL!
+
     connect(this, &YandexLamp::getCapabilitySignal, this, &YandexLamp::gotCapability);
 }
 
@@ -65,6 +67,11 @@ void YandexLamp::setColor(QRgb color)
     sendPostRequest(document.toJson());
 }
 
+void YandexLamp::setTemperature(int temperature)
+{
+
+}
+
 QJsonObject YandexLamp::generateRequest(QJsonObject action)
 {
     QJsonObject root;
@@ -125,15 +132,16 @@ QJsonObject YandexLamp::generateAction(QRgb color)
 
     QJsonObject hsv;
 
-    qDebug() << "RGB Color" << QColor::fromRgb(color).toRgb();
+    QColor _color = QColor(color);
 
-    QColor hsvColor = QColor(color).toHsv();
+    qDebug() << _color;
+    qDebug() << _color.red() << _color.green() << _color.blue();
+    _color = _color.toHsv();
+    qDebug() << (int) _color.hue() << (int) (_color.saturation() / 255.0 * 100) << (int) (_color.value() / 255.0 * 100);
 
-    qDebug() << "HSV Color" << hsvColor;
-
-    hsv["h"] = hsvColor.hue();
-    hsv["s"] = (int) (hsvColor.saturation() / 255.0 * 100);
-    hsv["v"] = (int) (hsvColor.value() / 255.0 * 100);
+    hsv["h"] = (int) (_color.hue());
+    hsv["s"] = (int) (_color.saturation() / 255.0 * 100);
+    hsv["v"] = (int) (_color.value() / 255.0 * 100);
 
     state["value"] = hsv;
 
