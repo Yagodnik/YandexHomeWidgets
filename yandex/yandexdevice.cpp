@@ -6,6 +6,7 @@ YandexDevice::YandexDevice(QString deviceId, QString deviceName, QObject *parent
 {
     this->deviceId = deviceId;
     this->deviceName = deviceName;
+    updated = false;
 
     networkManager = new QNetworkAccessManager(this);
 }
@@ -18,6 +19,27 @@ QString YandexDevice::getName()
 QString YandexDevice::getId()
 {
     return deviceId;
+}
+
+bool YandexDevice::isUpdated()
+{
+    return updated;
+}
+
+bool YandexDevice::isChanged()
+{
+    return haveChanges;
+}
+
+void YandexDevice::markAsUpdated()
+{
+    updated = true;
+}
+
+void YandexDevice::markAsUnupdated()
+{
+    haveChanges = false;
+    updated = false;
 }
 
 void YandexDevice::sendPostRequest(QByteArray data)
@@ -35,7 +57,12 @@ void YandexDevice::sendPostRequest(QByteArray data)
     request.setRawHeader("Authorization", authorizationHeader.toLocal8Bit());
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
-    networkManager->post(request, data);
+    QNetworkReply *reply = networkManager->post(request, data);
+
+    connect(reply, &QNetworkReply::finished, [=]() {
+        qDebug() << "All done!";
+        emit actionFinished();
+    });
 }
 
 void YandexDevice::getCapability(QString targetCapability)

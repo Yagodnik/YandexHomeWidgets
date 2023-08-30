@@ -4,12 +4,18 @@ GridView {
     id: root
     interactive: false
 
+    property string valueRole: "colorValue"
+    property string displayRole: "colorValue"
+
+    property var currentColor
+    signal clicked
+
     cellWidth: 34
     cellHeight: 34
 
     delegate: Rectangle {
         id: delegate
-        color: colorValue
+        color: model[root.displayRole]
         width: root.cellWidth - 4
         height: root.cellHeight - 4
 
@@ -20,7 +26,8 @@ GridView {
             hoverEnabled: true
 
             onClicked: {
-                yandexHome.setColor(deviceId, colorValue);
+                currentColor = model[root.valueRole];
+                root.clicked();
             }
 
             onContainsMouseChanged: {

@@ -4,7 +4,11 @@ Item {
     id: root
 
     property bool value: false
-    signal clicked(bool value)
+    signal clicked
+
+    onValueChanged: {
+        root.state === "on" ? root.state = "off" : root.state = "on";
+    }
 
     Rectangle {
         id: background
@@ -21,9 +25,8 @@ Item {
         anchors.fill: parent
 
         onClicked: {
-            root.state === "on" ? root.state = "off" : root.state = "on";
-            root.value = !value;
-            root.clicked(root.state === "on");
+            root.value = !root.value;
+            root.clicked();
         }
     }
 

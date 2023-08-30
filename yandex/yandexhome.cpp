@@ -5,6 +5,9 @@ YandexHome::YandexHome(QObject *parent)
 {
     networkAccessManager = new QNetworkAccessManager(this);
     devices = YandexDevices::getInstance();
+    watcher = new YandexWatcher();
+
+    watcher->pause();
 }
 
 void YandexHome::loadDevices()
@@ -39,6 +42,9 @@ void YandexHome::loadDevices()
 
                     YandexLamp *lamp = new YandexLamp(lampId, lampName);
 
+                    connect(lamp, &YandexLamp::actionFinished,
+                            this, &YandexHome::onActionFinished);
+
                     this->devices->add(lamp);
                 }
             }
@@ -56,16 +62,14 @@ void YandexHome::loadDevices()
     });
 }
 
-void YandexHome::updateDevices()
+void YandexHome::setWatcherState(bool state)
 {
-//    YandexLamp *lamp = (YandexLamp*) devices->at(0);
-
-//    lamp->update();
-//    devices->update();
+    if (state) watcher->resume();
+    else watcher->pause();
 }
 
 void YandexHome::setState(QString deviceId, bool state)
-{
+{    
     YandexLamp *lamp = (YandexLamp*) devices->withId(deviceId);
 
     if (lamp == nullptr) {
@@ -73,6 +77,7 @@ void YandexHome::setState(QString deviceId, bool state)
         return;
     }
 
+    watcher->pause();
     lamp->setState(state);
 }
 
@@ -88,12 +93,26 @@ void YandexHome::setBrightness(QString deviceId, int brightness)
     if (brightness == 0)
         brightness = 1;
 
+//    watcher->pause();
     lamp->setBrightness(brightness);
 }
 
 void YandexHome::setColor(QString deviceId, QString color)
 {
-    qDebug() << "colors!";
+    YandexLamp *lamp = (YandexLamp*) devices->withId(deviceId);
+
+    if (lamp == nullptr) {
+        emit lampError(deviceId);
+        return;
+    }
+
+//    watcher->pause();
+    QRgb _color = QColor(color).rgb();
+    lamp->setColor(_color);
+}
+
+void YandexHome::setTemperature(QString deviceId, int temperature)
+{
 
     YandexLamp *lamp = (YandexLamp*) devices->withId(deviceId);
 
@@ -102,6 +121,11 @@ void YandexHome::setColor(QString deviceId, QString color)
         return;
     }
 
-    QRgb _color = QColor(color).rgb();
-    lamp->setColor(_color);
+//    watcher->pause();
+    lamp->setTemperature(temperature);
+}
+
+void YandexHome::onActionFinished()
+{
+    watcher->resume();
 }

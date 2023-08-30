@@ -15,6 +15,8 @@ void YandexDevices::add(YandexDevice *device)
         return;
 
     devices.append(device);
+    connect(device, &YandexDevice::updateFinished, this, &YandexDevices::onUpdateFinished);
+
     emit deviceAdded();
 }
 
@@ -57,5 +59,27 @@ void YandexDevices::clear()
 void YandexDevices::update()
 {
     emit devicesUpdated();
+}
+
+void YandexDevices::onUpdateFinished(QString deviceId)
+{
+    withId(deviceId)->markAsUpdated();
+
+    foreach (YandexDevice *device, devices) {
+        if (!device->isUpdated())
+            return;
+    }
+
+    foreach (YandexDevice *device, devices) {
+        if (device->isChanged()) {
+            update();
+            break;
+        }
+    }
+
+    // Reseting everything
+    foreach (YandexDevice *device, devices) {
+        device->markAsUnupdated();
+    }
 }
 

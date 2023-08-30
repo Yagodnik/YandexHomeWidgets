@@ -61,15 +61,17 @@ void YandexLamp::setColor(QRgb color)
     QJsonObject action = generateAction(color);
     QJsonObject baseRequest = generateRequest(action);
 
-    qDebug() << baseRequest;
-
     QJsonDocument document(baseRequest);
     sendPostRequest(document.toJson());
 }
 
 void YandexLamp::setTemperature(int temperature)
 {
+    QJsonObject action = generateActionTemperature(temperature);
+    QJsonObject baseRequest = generateRequest(action);
 
+    QJsonDocument document(baseRequest);
+    sendPostRequest(document.toJson());
 }
 
 QJsonObject YandexLamp::generateRequest(QJsonObject action)
@@ -134,10 +136,7 @@ QJsonObject YandexLamp::generateAction(QRgb color)
 
     QColor _color = QColor(color);
 
-    qDebug() << _color;
-    qDebug() << _color.red() << _color.green() << _color.blue();
     _color = _color.toHsv();
-    qDebug() << (int) _color.hue() << (int) (_color.saturation() / 255.0 * 100) << (int) (_color.value() / 255.0 * 100);
 
     hsv["h"] = (int) (_color.hue());
     hsv["s"] = (int) (_color.saturation() / 255.0 * 100);
@@ -152,6 +151,21 @@ QJsonObject YandexLamp::generateAction(QRgb color)
     return action;
 }
 
+QJsonObject YandexLamp::generateActionTemperature(int temperature)
+{
+    QJsonObject action;
+    action["type"] = "devices.capabilities.color_setting";
+
+    QJsonObject state;
+
+    state["instance"] = "temperature_k";
+    state["value"] = temperature;
+
+    action["state"] = state;
+
+    return action;
+}
+
 void YandexLamp::gotCapability(QString capabilityName, QJsonObject capability)
 {
     if (capabilityName == "devices.capabilities.on_off") {
@@ -159,6 +173,12 @@ void YandexLamp::gotCapability(QString capabilityName, QJsonObject capability)
             return;
 
         QJsonObject state = capability["state"].toObject();
+
+        if (this->state != state["value"].toBool())
+            haveChanges = true;
+
         this->state = state["value"].toBool();
+
+        emit updateFinished(getId());
     }
 }

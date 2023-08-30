@@ -18,7 +18,8 @@ SOURCES += \
         yandex/yandexdevices.cpp \
         yandex/yandexhome.cpp \
         yandex/yandexlamp.cpp \
-        yandex/yandexoauth.cpp
+        yandex/yandexoauth.cpp \
+        yandex/yandexwatcher.cpp
 
 HEADERS += \
     3rdparty/colors.h \
@@ -35,7 +36,8 @@ HEADERS += \
     yandex/yandexdevices.h \
     yandex/yandexhome.h \
     yandex/yandexlamp.h \
-    yandex/yandexoauth.h
+    yandex/yandexoauth.h \
+    yandex/yandexwatcher.h
 
 RESOURCES += qml.qrc
 

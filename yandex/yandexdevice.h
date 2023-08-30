@@ -23,16 +23,28 @@ public:
 
     virtual void update() = 0;
 
+    bool isUpdated();
+    bool isChanged();
+    void markAsUpdated();
+    void markAsUnupdated();
+
+signals:
+    void actionFinished();
+
 protected:
     QString deviceId;
     QString deviceName;
     QNetworkAccessManager *networkManager;
+
+    bool updated;
+    bool haveChanges;
 
     void sendPostRequest(QByteArray data);
     void getCapability(QString targetCapability);
 
 signals:
     void getCapabilitySignal(QString capabilityName, QJsonObject capability);
+    void updateFinished(QString deviceId);
 };
 
 #endif // YANDEXDEVICE_H

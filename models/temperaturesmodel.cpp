@@ -36,7 +36,7 @@ QHash<int, QByteArray> TemperaturesModel::roleNames() const
 {    QHash<int, QByteArray> roles = QAbstractListModel::roleNames();
 
     roles[TemperatureRole] = "temperatureValue";
-    roles[DisplayColor] = "colorValue";
+    roles[DisplayColor] = "displayColor";
     roles[IdRole] = "colorId";
 
     return roles;}

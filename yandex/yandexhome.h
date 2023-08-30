@@ -10,6 +10,7 @@
 #include <QJsonArray>
 #include "yandex/yandexlamp.h"
 #include "yandex/yandexdevices.h"
+#include "yandex/yandexwatcher.h"
 
 class YandexHome : public QObject
 {
@@ -18,15 +19,14 @@ public:
     explicit YandexHome(QObject *parent = nullptr);
 
     Q_INVOKABLE void loadDevices();
-    Q_INVOKABLE void updateDevices();
+    Q_INVOKABLE void setWatcherState(bool state);
 
     Q_INVOKABLE void setState(QString deviceId, bool state);
     Q_INVOKABLE void setBrightness(QString deviceId, int brightness);
     Q_INVOKABLE void setColor(QString deviceId, QString color);
+    Q_INVOKABLE void setTemperature(QString deviceId, int temperature);
 
     Q_INVOKABLE void getSupportedColors(){}
-
-    void setModel(QVariant model);
 
 signals:
     void devicesLoaded(int result);
@@ -34,9 +34,12 @@ signals:
     void devicesUpdated();
 
 private:
-    YandexDevices *devices;
-
     QNetworkAccessManager *networkAccessManager;
+    YandexDevices *devices;
+    YandexWatcher *watcher;
+
+private slots:
+    void onActionFinished();
 };
 
 #endif // YANDEXHOME_H

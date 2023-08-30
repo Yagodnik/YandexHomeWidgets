@@ -10,7 +10,7 @@ Item {
         color: "#1d1e1d"
 
         anchors.bottom: loginButton.top
-        anchors.bottomMargin: 5
+        anchors.bottomMargin: 20
         anchors.horizontalCenter: parent.horizontalCenter
 
         horizontalAlignment: Text.AlignHCenter
@@ -19,7 +19,7 @@ Item {
         font.weight: textFont.font.weight
         font.pixelSize: 12
 
-        text: "Чтобы приложение могло найти лампы\n необходимо войти в аккаунт"
+        text: "Необходимо войти в аккаунт, чтобы\nприложение могло получить доступ\nк вашим устройствам"
     }
 
     Components.Button {

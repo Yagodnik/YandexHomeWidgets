@@ -63,5 +63,9 @@ void LampsListModel::deviceAdded()
 
 void LampsListModel::devicesUpdated()
 {
+    YandexLamp *lamp = (YandexLamp*) devices->at(0);
+    YandexDeviceData *data = lamp->getDeviceData();
+    qDebug() <<  "Update received!" << data->state;
+
     emit layoutChanged();
 }

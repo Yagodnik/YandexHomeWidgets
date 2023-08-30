@@ -88,7 +88,7 @@ Item {
                 font.weight: textFont.font.weight
                 font.pixelSize: 16
 
-                text: "Ваши девайсы"
+                text: "Ваши устройства"
             }
 
             Components.Button {
@@ -131,7 +131,7 @@ Item {
                 anchors.fill: parent
 
                 cellWidth: parent.width
-                cellHeight: 170
+                cellHeight: 204
 
                 model: devicesModel
                 delegate: Item {
@@ -175,6 +175,8 @@ Item {
                         anchors.top: parent.top
                         anchors.topMargin: 6
 
+                        value: deviceState
+
                         onClicked: {
                             yandexHome.setState(deviceId, value);
                         }
@@ -202,6 +204,8 @@ Item {
                         id: temperaturePicker
 
                         model: temperaturesModel
+                        valueRole: "temperatureValue"
+                        displayRole: "displayColor"
 
                         height: 30
 
@@ -211,6 +215,10 @@ Item {
                         anchors.leftMargin: 12
                         anchors.right: parent.right
                         anchors.rightMargin: 12
+
+                        onClicked: {
+                            yandexHome.setTemperature(deviceId, currentColor);
+                        }
                     }
 
                     Components.ColorPicker {
@@ -225,6 +233,10 @@ Item {
                         anchors.leftMargin: 12
                         anchors.right: parent.right
                         anchors.rightMargin: 12
+
+                        onClicked: {
+                            yandexHome.setColor(deviceId, currentColor);
+                        }
                     }
                 }
             }

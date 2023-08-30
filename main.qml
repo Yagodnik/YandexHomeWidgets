@@ -44,11 +44,13 @@ Window {
     }
 
     onActiveChanged: {
-        yandexHome.updateDevices();
-
         if (!active) {
             window.hide();
         }
+    }
+
+    onVisibleChanged: {
+        yandexHome.setWatcherState(visible);
     }
 
     Connections {
@@ -88,8 +90,6 @@ Window {
         icon.source: "qrc:/assets/icon.png"
 
         onActivated: function(reason) {
-            yandexHome.updateDevices();
-
             if (reason !== SystemTrayIcon.Trigger)
                 return;
 

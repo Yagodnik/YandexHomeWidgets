@@ -29,6 +29,9 @@ private:
     YandexDevices();
     YandexDevices(const YandexDevices&);
     YandexDevices& operator=(const YandexDevices&);
+
+private slots:
+    void onUpdateFinished(QString deviceId);
 };
 
 #endif // YANDEXDEVICES_H

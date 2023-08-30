@@ -11,10 +11,9 @@
 #include "yandex/yandexaccount.h"
 #include "3rdparty/desktopfeatures.h"
 
-// TODO: Fix bug with colors
 // TODO: Ask for current lamp state when focusing
+// TODO: Ask for max and min temp values and supported color model
 // TODO: Check for memory leaks
-// TODO: Create base class for all yandex devices
 // TODO: Add capabilities classes
 
 int main(int argc, char *argv[])
