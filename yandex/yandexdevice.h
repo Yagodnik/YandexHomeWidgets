@@ -40,10 +40,11 @@ protected:
     bool haveChanges;
 
     void sendPostRequest(QByteArray data);
-    void getCapability(QString targetCapability);
+    void getFullInfo();
+    void generateRequest(QJsonObject action);
 
 signals:
-    void getCapabilitySignal(QString capabilityName, QJsonObject capability);
+    void infoReady(QJsonArray capabilities);
     void updateFinished(QString deviceId);
 };
 

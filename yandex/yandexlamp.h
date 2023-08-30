@@ -14,7 +14,9 @@
 #include "3rdparty/secrets.h"
 #include "yandex/yandexdevicedata.h"
 #include "yandexdevice.h"
-#include "yandexwatcher.h"
+#include "capabilities/onoff.h"
+#include "capabilities/range.h"
+#include "capabilities/colorsetting.h"
 
 class YandexLamp : public YandexDevice
 {
@@ -43,14 +45,8 @@ private:
     int brightness;
     ColorModel colorModel;
 
-    QJsonObject generateRequest(QJsonObject action);
-    QJsonObject generateAction(bool lampState);
-    QJsonObject generateAction(int brightness);
-    QJsonObject generateAction(QRgb color);
-    QJsonObject generateActionTemperature(int temperature);
-
 private slots:
-    void gotCapability(QString capabilityName, QJsonObject capability);
+    void onInfoReady(QJsonArray capabilities);
 };
 
 Q_DECLARE_METATYPE(YandexLamp)

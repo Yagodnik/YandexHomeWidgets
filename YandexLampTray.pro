@@ -13,6 +13,10 @@ SOURCES += \
         models/lampslistmodel.cpp \
         3rdparty/secrets.cpp \
         models/temperaturesmodel.cpp \
+        yandex/capabilities/basecapability.cpp \
+        yandex/capabilities/colorsetting.cpp \
+        yandex/capabilities/onoff.cpp \
+        yandex/capabilities/range.cpp \
         yandex/yandexaccount.cpp \
         yandex/yandexdevice.cpp \
         yandex/yandexdevices.cpp \
@@ -30,6 +34,10 @@ HEADERS += \
     models/lampslistmodel.h \
     3rdparty/secrets.h \
     models/temperaturesmodel.h \
+    yandex/capabilities/basecapability.h \
+    yandex/capabilities/colorsetting.h \
+    yandex/capabilities/onoff.h \
+    yandex/capabilities/range.h \
     yandex/yandexaccount.h \
     yandex/yandexdevice.h \
     yandex/yandexdevicedata.h \

@@ -131,7 +131,7 @@ Window {
 
             MenuItem {
                 text: qsTr("Github")
-                onTriggered: Qt.openUrlExternally("https://github.com/Yagodnik/YandexLampTray")
+                onTriggered: Qt.openUrlExternally("https://github.com/Yagodnik/YandexLampApp")
             }
         }
     }

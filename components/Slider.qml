@@ -3,8 +3,16 @@ import QtQuick 2.15
 Item {
     id: root
 
+    property int sliderWidth
     property real value: 0
     signal newValue
+
+    onValueChanged: {
+        if (!mouseArea.drag.active) {
+            progress.width = (sliderWidth - handle.width) * value;
+            handle.x = (sliderWidth - handle.width) * value;
+        }
+    }
 
     Rectangle {
         id: background
@@ -37,6 +45,10 @@ Item {
         border.width: 1
         border.color: "#dae8dc"
 
+        onXChanged: {
+            progress.width = handle.x;
+        }
+
         Rectangle {
             id: center
 
@@ -50,6 +62,7 @@ Item {
         }
 
         MouseArea {
+            id: mouseArea
             anchors.fill: parent
             drag.target: handle
             drag.axis: Drag.XAxis

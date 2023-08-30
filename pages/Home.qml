@@ -187,13 +187,17 @@ Item {
 
                         anchors.top: title.bottom
                         anchors.topMargin: 8
+
                         anchors.left: parent.left
                         anchors.leftMargin: 12
-
                         anchors.right: parent.right
                         anchors.rightMargin: 5
 
+                        sliderWidth: parent.width - 17
+
                         height: 5
+
+                        value: deviceBrightness / 100.0
 
                         onNewValue: {
                             yandexHome.setBrightness(deviceId, value * 100);

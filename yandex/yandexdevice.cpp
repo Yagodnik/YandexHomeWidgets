@@ -65,7 +65,7 @@ void YandexDevice::sendPostRequest(QByteArray data)
     });
 }
 
-void YandexDevice::getCapability(QString targetCapability)
+void YandexDevice::getFullInfo()
 {
     Secrets *secrets = Secrets::getInstance();
 
@@ -86,16 +86,30 @@ void YandexDevice::getCapability(QString targetCapability)
             QJsonObject root = document.object();
             QJsonArray capabilities = root["capabilities"].toArray();
 
-            foreach (QJsonValueRef ref, capabilities) {
-                QJsonObject capability = ref.toObject();
-
-                if (capability["type"] == targetCapability) {
-                    emit getCapabilitySignal(targetCapability, capability);
-                    break;
-                }
-            }
+            emit infoReady(capabilities);
         } else {
             qDebug() << "Error with device" << deviceId << "cant get capabilities!";
         }
     });
 }
+
+void YandexDevice::generateRequest(QJsonObject action)
+{
+    QJsonObject baseRequest;
+
+    QJsonArray actions;
+    actions.append(action);
+
+    QJsonArray devices;
+    QJsonObject device;
+    device["id"] = deviceId;
+    device["actions"] = actions;
+
+    devices.append(device);
+
+    baseRequest["devices"] = devices;
+
+    QJsonDocument document(baseRequest);
+    sendPostRequest(document.toJson());
+}
+

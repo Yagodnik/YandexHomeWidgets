@@ -5,7 +5,7 @@ YandexLamp::YandexLamp(QString deviceId,
 {
     // ASK BASIC INFO SUCH AS COLOR MODEL!
 
-    connect(this, &YandexLamp::getCapabilitySignal, this, &YandexLamp::gotCapability);
+    connect(this, &YandexDevice::infoReady, this, &YandexLamp::onInfoReady);
 }
 
 YandexLamp::~YandexLamp()
@@ -25,7 +25,7 @@ YandexDeviceData *YandexLamp::getDeviceData()
 
 void YandexLamp::update()
 {
-    getCapability("devices.capabilities.on_off");
+    getFullInfo();
 }
 
 bool YandexLamp::getState()
@@ -40,145 +40,47 @@ int YandexLamp::getBrightness()
 
 void YandexLamp::setState(bool state)
 {
-    QJsonObject action = generateAction(state);
-    QJsonObject baseRequest = generateRequest(action);
-
-    QJsonDocument document(baseRequest);
-    sendPostRequest(document.toJson());
+    generateRequest(OnOff::generate(state));
 }
 
 void YandexLamp::setBrightness(int brightness)
 {
-    QJsonObject action = generateAction(brightness);
-    QJsonObject baseRequest = generateRequest(action);
-
-    QJsonDocument document(baseRequest);
-    sendPostRequest(document.toJson());
+    generateRequest(Range::generate(brightness));
 }
 
 void YandexLamp::setColor(QRgb color)
 {
-    QJsonObject action = generateAction(color);
-    QJsonObject baseRequest = generateRequest(action);
-
-    QJsonDocument document(baseRequest);
-    sendPostRequest(document.toJson());
+    generateRequest(ColorSetting::generate(color));
 }
 
 void YandexLamp::setTemperature(int temperature)
 {
-    QJsonObject action = generateActionTemperature(temperature);
-    QJsonObject baseRequest = generateRequest(action);
-
-    QJsonDocument document(baseRequest);
-    sendPostRequest(document.toJson());
+    generateRequest(ColorSetting::generate(temperature));
 }
 
-QJsonObject YandexLamp::generateRequest(QJsonObject action)
+void YandexLamp::onInfoReady(QJsonArray capabilities)
 {
-    QJsonObject root;
+    foreach (QJsonValueRef ref, capabilities) {
+        QJsonObject capability = ref.toObject();
 
-    QJsonArray actions;
-    actions.append(action);
+        if (capability["type"] == "devices.capabilities.on_off") {
+            QJsonObject state = capability["state"].toObject();
 
-    QJsonArray devices;
-    QJsonObject device;
-    device["id"] = deviceId;
-    device["actions"] = actions;
+            if (QVariant(this->state) != state["value"].toVariant())
+                haveChanges = true;
 
-    devices.append(device);
+            this->state = state["value"].toBool();
+        }
 
-    root["devices"] = devices;
+        if (capability["type"] == "devices.capabilities.range") {
+            QJsonObject state = capability["state"].toObject();
 
-    return root;
-}
+            if (QVariant(this->brightness) != state["value"].toVariant())
+                haveChanges = true;
 
-QJsonObject YandexLamp::generateAction(bool lampState)
-{
-    QJsonObject action;
-    action["type"] = "devices.capabilities.on_off";
-
-    QJsonObject state;
-
-    state["instance"] = "on";
-    state["value"] = lampState;
-
-    action["state"] = state;
-
-    return action;
-}
-
-QJsonObject YandexLamp::generateAction(int brightness)
-{
-    QJsonObject action;
-    action["type"] = "devices.capabilities.range";
-
-    QJsonObject state;
-
-    state["instance"] = "brightness";
-    state["value"] = brightness;
-
-    action["state"] = state;
-
-    return action;
-}
-
-QJsonObject YandexLamp::generateAction(QRgb color)
-{
-    QJsonObject action;
-    action["type"] = "devices.capabilities.color_setting";
-
-    QJsonObject state;
-
-    state["instance"] = "hsv";
-
-    QJsonObject hsv;
-
-    QColor _color = QColor(color);
-
-    _color = _color.toHsv();
-
-    hsv["h"] = (int) (_color.hue());
-    hsv["s"] = (int) (_color.saturation() / 255.0 * 100);
-    hsv["v"] = (int) (_color.value() / 255.0 * 100);
-
-    state["value"] = hsv;
-
-    qDebug() << state["value"];
-
-    action["state"] = state;
-
-    return action;
-}
-
-QJsonObject YandexLamp::generateActionTemperature(int temperature)
-{
-    QJsonObject action;
-    action["type"] = "devices.capabilities.color_setting";
-
-    QJsonObject state;
-
-    state["instance"] = "temperature_k";
-    state["value"] = temperature;
-
-    action["state"] = state;
-
-    return action;
-}
-
-void YandexLamp::gotCapability(QString capabilityName, QJsonObject capability)
-{
-    if (capabilityName == "devices.capabilities.on_off") {
-        if (capability.empty())
-            return;
-
-        QJsonObject state = capability["state"].toObject();
-
-        if (this->state != state["value"].toBool())
-            haveChanges = true;
-
-        this->state = state["value"].toBool();
-
-        emit updateFinished(getId());
+            this->brightness = state["value"].toInt();
+        }
     }
+
+    emit updateFinished(getId());
 }
