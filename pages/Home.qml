@@ -126,7 +126,8 @@ Item {
 
             GridView {
                 id: devicesGrid
-                interactive: false
+                interactive: true
+                clip: true
 
                 anchors.fill: parent
 
@@ -135,12 +136,60 @@ Item {
 
                 model: devicesModel
                 delegate: Item {
+                    id: delegate
                     width: devicesGrid.cellWidth - 4
                     height: devicesGrid.cellHeight - 4
+                    clip: true
+
+                    state: "maximized"
+
+                    states: [
+                        State {
+                            name: "maximized"
+
+                            PropertyChanges {
+                                target: delegate
+                                height: devicesGrid.cellHeight - 4
+                            }
+
+                            PropertyChanges {
+                                target: minimizeIcon
+                                rotation: -90
+                            }
+                        },
+
+                        State {
+                            name: "minimized"
+
+                            PropertyChanges {
+                                target: delegate
+                                height: 32
+                            }
+
+                            PropertyChanges {
+                                target: minimizeIcon
+                                rotation: 90
+                            }
+                        }
+                    ]
+
+                    transitions: Transition {
+                        PropertyAnimation {
+                            target: delegate
+                            properties: "height"
+                            easing.type: Easing.InOutSine
+                        }
+
+                        PropertyAnimation {
+                            target: minimizeIcon
+                            properties: "rotation"
+                            easing.type: Easing.InOutSine
+                        }
+                    }
 
                     Rectangle {
                         width: 3
-                        height: parent.height - 16
+                        height: parent.height
                         anchors.verticalCenter: parent.verticalCenter
                         color: "#00829e"
                         radius: 3
@@ -179,6 +228,34 @@ Item {
 
                         onClicked: {
                             yandexHome.setState(deviceId, value);
+                        }
+                    }
+
+                    Item {
+                        id: minimizeButton
+                        width: 16
+                        height: 16
+
+                        anchors.right: parent.right
+                        anchors.rightMargin: 8
+                        anchors.top: parent.top
+                        anchors.topMargin: 6
+
+                        Image {
+                            id: minimizeIcon
+                            anchors.fill: parent
+                            source: "qrc:/assets/icons8-arrow-24.png"
+
+                            rotation: -90
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+
+                            onClicked: {
+                                delegate.state === "maximized" ? delegate.state = "minimized" :
+                                                                 delegate.state = "maximized";
+                            }
                         }
                     }
 

@@ -11,10 +11,9 @@
 #include "yandex/yandexaccount.h"
 #include "3rdparty/desktopfeatures.h"
 
-// TODO: Ask for current lamp state when focusing
 // TODO: Ask for max and min temp values and supported color model
 // TODO: Check for memory leaks
-// TODO: Add capabilities classes
+// TODO: Add offline mark to lamp
 
 int main(int argc, char *argv[])
 {
