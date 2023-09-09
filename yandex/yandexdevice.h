@@ -17,6 +17,7 @@ class YandexDevice : public QObject
     Q_OBJECT
 public:
     explicit YandexDevice(QString deviceId, QString deviceName, QObject *parent = nullptr);
+    ~YandexDevice();
 
     QString getName();
     QString getId();

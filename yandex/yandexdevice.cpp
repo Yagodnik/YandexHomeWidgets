@@ -11,6 +11,11 @@ YandexDevice::YandexDevice(QString deviceId, QString deviceName, QObject *parent
     networkManager = new QNetworkAccessManager(this);
 }
 
+YandexDevice::~YandexDevice()
+{
+    networkManager->deleteLater();
+}
+
 QString YandexDevice::getName()
 {
     return deviceName;
@@ -60,8 +65,9 @@ void YandexDevice::sendPostRequest(QByteArray data)
     QNetworkReply *reply = networkManager->post(request, data);
 
     connect(reply, &QNetworkReply::finished, [=]() {
-        qDebug() << "All done!";
         emit actionFinished();
+
+        reply->deleteLater();
     });
 }
 
@@ -90,6 +96,8 @@ void YandexDevice::getFullInfo()
         } else {
             qDebug() << "Error with device" << deviceId << "cant get capabilities!";
         }
+
+        reply->deleteLater();
     });
 }
 
@@ -112,4 +120,3 @@ void YandexDevice::generateRequest(QJsonObject action)
     QJsonDocument document(baseRequest);
     sendPostRequest(document.toJson());
 }
-

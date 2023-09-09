@@ -13,9 +13,9 @@ YandexLamp::~YandexLamp()
     networkManager->deleteLater();
 }
 
-YandexDeviceData *YandexLamp::getDeviceData()
+YandexDeviceData YandexLamp::getDeviceData()
 {
-    return new YandexDeviceData {
+    return YandexDeviceData {
         .id =  deviceId,
         .name = deviceName,
         .state = getState(),

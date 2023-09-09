@@ -14,6 +14,7 @@
 // TODO: Ask for max and min temp values and supported color model
 // TODO: Check for memory leaks
 // TODO: Add offline mark to lamp
+// TODO: Fix bugs with update
 
 int main(int argc, char *argv[])
 {

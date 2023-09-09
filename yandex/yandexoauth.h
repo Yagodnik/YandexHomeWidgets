@@ -14,6 +14,7 @@ class YandexOAuth : public QObject
     Q_OBJECT
 public:
     explicit YandexOAuth(QObject *parent = nullptr);
+    ~YandexOAuth();
 
     Q_INVOKABLE void grant();
     Q_INVOKABLE QString getToken();

@@ -28,17 +28,17 @@ QVariant LampsListModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     YandexLamp *lamp = (YandexLamp*) devices->at(index.row());
-    YandexDeviceData *data = lamp->getDeviceData();
+    YandexDeviceData data = lamp->getDeviceData();
 
     switch (role) {
     case IdRole:
-        return data->id;
+        return data.id;
     case TextRole:
-        return data->name;
+        return data.name;
     case StateRole:
-        return data->state;
+        return data.state;
     case BrightnessRole:
-        return data->brightness;
+        return data.brightness;
     default:
         return QVariant();
     }
@@ -63,9 +63,5 @@ void LampsListModel::deviceAdded()
 
 void LampsListModel::devicesUpdated()
 {
-    YandexLamp *lamp = (YandexLamp*) devices->at(0);
-    YandexDeviceData *data = lamp->getDeviceData();
-    qDebug() <<  "Update received!" << data->state;
-
-    emit layoutChanged();
+    emit dataChanged(index(0), index(devices->count() - 1));
 }

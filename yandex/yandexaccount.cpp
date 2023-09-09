@@ -6,6 +6,11 @@ YandexAccount::YandexAccount(QObject *parent)
     networkManager = new QNetworkAccessManager(this);
 }
 
+YandexAccount::~YandexAccount()
+{
+    networkManager->deleteLater();
+}
+
 void YandexAccount::askInfo()
 {
     Secrets *secrets = Secrets::getInstance();
@@ -35,11 +40,16 @@ void YandexAccount::askInfo()
 
             emit error();
         }
+
+        reply->deleteLater();
     });
 }
 
 QString YandexAccount::getName()
 {
+    if (name.length() >= 15)
+        return name.mid(0, 15) + "...";
+
     return name;
 }
 

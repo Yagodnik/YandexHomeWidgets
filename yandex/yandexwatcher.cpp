@@ -5,6 +5,7 @@ YandexWatcher::YandexWatcher(QObject *parent): QObject(parent) {
     devices = YandexDevices::getInstance();
     blocked = false;
 
+    // MEMORY LEAK HERE!
     connect(&timer, &QTimer::timeout, this, &YandexWatcher::onTriggered);
 }
 

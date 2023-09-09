@@ -10,8 +10,6 @@ YandexOAuth::YandexOAuth(QObject *parent)
 
     token = secrets->get(OAUTH_TOKEN_NAME);
 
-    qDebug() << "Saved token:" << token;
-
     oauth2->setReplyHandler(replyHandler);
     oauth2->setAuthorizationUrl(QUrl("https://oauth.yandex.ru/authorize"));
     oauth2->setAccessTokenUrl(QUrl("https://oauth.yandex.ru/token?grant_type=authorization_code"));
@@ -33,6 +31,12 @@ YandexOAuth::YandexOAuth(QObject *parent)
 
         QDesktopServices::openUrl(url);
     });
+}
+
+YandexOAuth::~YandexOAuth()
+{
+    oauth2->deleteLater();
+    replyHandler->deleteLater();
 }
 
 void YandexOAuth::grant()

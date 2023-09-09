@@ -2,6 +2,13 @@
 
 YandexDevices::YandexDevices() {}
 
+YandexDevices::~YandexDevices()
+{
+    foreach (YandexDevice *device, devices) {
+        device->deleteLater();
+    }
+}
+
 YandexDevices *YandexDevices::getInstance()
 {
     static YandexDevices instance;

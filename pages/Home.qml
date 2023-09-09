@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import QtQuick.Controls 2.4
 import "../components" as Components
 
 Item {
@@ -41,6 +42,17 @@ Item {
             font.family: textFont.font.family
             font.weight: textFont.font.weight
             font.pixelSize: 16
+
+            property string toolTipText: text
+            ToolTip.delay: 700
+            ToolTip.text: toolTipText
+            ToolTip.visible: toolTipText ? tooltipMouseArea.containsMouse : false
+
+            MouseArea {
+                id: tooltipMouseArea
+                anchors.fill: parent
+                hoverEnabled: true
+            }
         }
 
         Components.Button {
@@ -124,21 +136,44 @@ Item {
             anchors.rightMargin: 3
             anchors.bottom: parent.bottom
 
-            GridView {
+            ListView {
                 id: devicesGrid
                 interactive: true
                 clip: true
+                spacing: 5
 
                 anchors.fill: parent
 
-                cellWidth: parent.width
-                cellHeight: 204
+//                cellWidth: parent.width
+//                cellHeight: 204
+
+//                ScrollBar.vertical: ScrollBar {
+//                    id: control
+//                    visible: true
+//                    active: true
+//                    size: 0.1
+//                    height: devicesGrid.availableHeight
+
+//                    contentItem: Rectangle {
+//                       implicitWidth: 6
+//                       implicitHeight: 20
+//                       radius: width / 2
+//                       color: control.pressed ? "#81e889" : "#c2f4c6"
+//                       // Hide the ScrollBar when it's not needed.
+//                       opacity: control.policy === ScrollBar.AlwaysOn || (control.active && control.size < 1.0) ? 0.75 : 0
+
+//                       // Animate the changes in opacity (default duration is 250 ms).
+//                       Behavior on opacity {
+//                           NumberAnimation {}
+//                       }
+//                   }
+//                }
 
                 model: devicesModel
                 delegate: Item {
                     id: delegate
-                    width: devicesGrid.cellWidth - 4
-                    height: devicesGrid.cellHeight - 4
+                    width: devicesGrid.width - 4
+                    height: 204
                     clip: true
 
                     state: "maximized"
@@ -149,7 +184,7 @@ Item {
 
                             PropertyChanges {
                                 target: delegate
-                                height: devicesGrid.cellHeight - 4
+                                height: 204
                             }
 
                             PropertyChanges {
@@ -232,6 +267,37 @@ Item {
                     }
 
                     Item {
+                        id: offlineMark
+                        width: 60
+                        height: 22
+
+                        anchors.top: parent.top
+                        anchors.topMargin: 6
+                        anchors.left: onOff.right
+                        anchors.leftMargin: 15
+
+                        Rectangle {
+                            anchors.fill: parent
+                            color: "#e77fa2"
+                            radius: 45
+                        }
+
+                        Text {
+                            anchors.fill: parent
+                            text: "Не в сети"
+
+                            color: "#ecf9e6"
+
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
+
+                            font.family: textFont.font.family
+                            font.weight: textFont.font.weight
+                            font.pixelSize: 9
+                        }
+                    }
+
+                    Item {
                         id: minimizeButton
                         width: 16
                         height: 16
@@ -263,7 +329,7 @@ Item {
                         id: slider
 
                         anchors.top: title.bottom
-                        anchors.topMargin: 8
+                        anchors.topMargin: 10
 
                         anchors.left: parent.left
                         anchors.leftMargin: 12

@@ -29,7 +29,7 @@ public:
                         QString deviceName);
     ~YandexLamp();
 
-    YandexDeviceData *getDeviceData();
+    YandexDeviceData getDeviceData();
     void update();
 
     bool getState();

@@ -10,6 +10,13 @@ YandexHome::YandexHome(QObject *parent)
     watcher->pause();
 }
 
+YandexHome::~YandexHome()
+{
+    networkAccessManager->deleteLater();
+    devices->deleteLater();
+    watcher->deleteLater();
+}
+
 void YandexHome::loadDevices()
 {
     Secrets *secrets = Secrets::getInstance();
@@ -46,6 +53,7 @@ void YandexHome::loadDevices()
                             this, &YandexHome::onActionFinished);
 
                     this->devices->add(lamp);
+                    this->devices->add(lamp);
                 }
             }
 
@@ -59,6 +67,8 @@ void YandexHome::loadDevices()
 
             emit devicesLoaded(-1);
         }
+
+        reply->deleteLater();
     });
 }
 

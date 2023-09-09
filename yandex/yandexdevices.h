@@ -27,6 +27,7 @@ private:
     QList<YandexDevice*> devices;
 
     YandexDevices();
+    ~YandexDevices();
     YandexDevices(const YandexDevices&);
     YandexDevices& operator=(const YandexDevices&);
 
