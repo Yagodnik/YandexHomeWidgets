@@ -41,3 +41,8 @@ void Secrets::saveToSettings(QString key, QString value)
     settings.setValue(key, value);
 }
 
+void Secrets::clearValue(QString key)
+{
+    settings.remove(key);
+}
+

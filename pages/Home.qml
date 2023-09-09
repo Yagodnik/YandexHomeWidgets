@@ -66,6 +66,12 @@ Item {
             anchors.right: parent.right
             anchors.rightMargin: 10
             anchors.verticalCenter: parent.verticalCenter
+
+            onClicked: {
+                yandexOAuth.logout();
+                stack.currentIndex = 0;
+                yandexAccount.askInfo();
+            }
         }
     }
 

@@ -14,6 +14,7 @@ public:
 
     QString get(QString key);
     Q_INVOKABLE void saveToSettings(QString key, QString value);
+    void clearValue(QString key);
 
 private:
     QMap<QString, QString> data;

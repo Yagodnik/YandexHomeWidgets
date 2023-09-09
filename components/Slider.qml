@@ -74,6 +74,15 @@ Item {
                     root.newValue();
                 }
             }
+
+            hoverEnabled: true
+            onContainsMouseChanged: {
+                if (containsMouse) {
+                    handle.border.color = "#747474";
+                } else {
+                    handle.border.color = "#dae8dc";
+                }
+            }
         }
     }
 }

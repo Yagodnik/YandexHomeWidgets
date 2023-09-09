@@ -94,7 +94,7 @@ void YandexDevice::getFullInfo()
 
             emit infoReady(capabilities);
         } else {
-            qDebug() << "Error with device" << deviceId << "cant get capabilities!";
+//            qDebug() << "Error with device" << deviceId << "cant get capabilities!";
         }
 
         reply->deleteLater();

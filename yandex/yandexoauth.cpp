@@ -17,6 +17,8 @@ YandexOAuth::YandexOAuth(QObject *parent)
     oauth2->setClientIdentifierSharedKey(secrets->get("client_secret"));
     oauth2->setScope("iot:view iot:control login:info login:avatar");
 
+    replyHandler->setCallbackText(getCallbackContent());
+
     connect(oauth2, &QOAuth2AuthorizationCodeFlow::statusChanged, [=](QAbstractOAuth::Status status) {
         if (status == QAbstractOAuth::Status::Granted) {
             token = oauth2->token();
@@ -54,4 +56,26 @@ void YandexOAuth::saveToken(QString token)
     Secrets *secrets = Secrets::getInstance();
 
     secrets->saveToSettings(OAUTH_TOKEN_NAME, token);
+}
+
+void YandexOAuth::logout()
+{
+    Secrets *secrets = Secrets::getInstance();
+
+    secrets->clearValue(OAUTH_TOKEN_NAME);
+}
+
+QString YandexOAuth::getCallbackContent()
+{
+    QFile document(":/assets/web/callback.html");
+
+    if (!document.open(QIODevice::ReadOnly)) {
+        qDebug() << "Cant open file with callback!";
+        return "Авторизация выполнена успешно! Теперь вы можете свободно закрыть эту страницу и вернуться в приложение";
+    }
+
+    QString content = document.readAll();
+    document.close();
+
+    return content;
 }

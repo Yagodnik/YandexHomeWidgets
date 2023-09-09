@@ -23,5 +23,6 @@
         <file>pages/Login.qml</file>
         <file>pages/Home.qml</file>
         <file>assets/temperatures.json</file>
+        <file>assets/web/callback.html</file>
     </qresource>
 </RCC>

@@ -19,7 +19,7 @@ GridView {
         width: root.cellWidth - 4
         height: root.cellHeight - 4
 
-        radius: 3
+        state: "noHover"
 
         MouseArea {
             anchors.fill: parent
@@ -41,7 +41,7 @@ GridView {
 
                 PropertyChanges {
                     target: delegate
-                    radius: 5
+                    radius: 8
                 }
             },
 
@@ -50,7 +50,7 @@ GridView {
 
                 PropertyChanges {
                     target: delegate
-                    radius: 8
+                    radius: 5
                 }
             }
         ]
