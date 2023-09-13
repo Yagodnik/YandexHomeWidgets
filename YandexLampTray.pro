@@ -26,26 +26,26 @@ SOURCES += \
         yandex/yandexwatcher.cpp
 
 HEADERS += \
-    3rdparty/colors.h \
-    3rdparty/constants.h \
-    3rdparty/desktopfeatures.h \
-    3rdparty/temperatures.h \
-    models/colorsmodel.h \
-    models/lampslistmodel.h \
-    3rdparty/secrets.h \
-    models/temperaturesmodel.h \
-    yandex/capabilities/basecapability.h \
-    yandex/capabilities/colorsetting.h \
-    yandex/capabilities/onoff.h \
-    yandex/capabilities/range.h \
-    yandex/yandexaccount.h \
-    yandex/yandexdevice.h \
-    yandex/yandexdevicedata.h \
-    yandex/yandexdevices.h \
-    yandex/yandexhome.h \
-    yandex/yandexlamp.h \
-    yandex/yandexoauth.h \
-    yandex/yandexwatcher.h
+        3rdparty/colors.h \
+        3rdparty/constants.h \
+        3rdparty/desktopfeatures.h \
+        3rdparty/temperatures.h \
+        models/colorsmodel.h \
+        models/lampslistmodel.h \
+        3rdparty/secrets.h \
+        models/temperaturesmodel.h \
+        yandex/capabilities/basecapability.h \
+        yandex/capabilities/colorsetting.h \
+        yandex/capabilities/onoff.h \
+        yandex/capabilities/range.h \
+        yandex/yandexaccount.h \
+        yandex/yandexdevice.h \
+        yandex/yandexdevicedata.h \
+        yandex/yandexdevices.h \
+        yandex/yandexhome.h \
+        yandex/yandexlamp.h \
+        yandex/yandexoauth.h \
+        yandex/yandexwatcher.h
 
 RESOURCES += qml.qrc
 

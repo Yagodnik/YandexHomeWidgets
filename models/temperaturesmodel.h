@@ -21,8 +21,12 @@ public:
     QVariant data(const QModelIndex &index, int role) const;
     QHash<int, QByteArray> roleNames() const;
 
+    Q_INVOKABLE void setLimits(int min, int max);
+
 private:
     Temperatures *temperatures;
 };
+
+Q_DECLARE_METATYPE(TemperaturesModel);
 
 #endif // TEMPERATURESMODEL_H

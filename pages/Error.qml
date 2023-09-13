@@ -2,15 +2,14 @@ import QtQuick 2.15
 import "../components/ui" as Components
 
 Item {
-    id: loginPage
+    id: errorPage
 
     Text {
-        height: 32
+        height: 26
 
         color: "#1d1e1d"
 
-        anchors.bottom: loginButton.top
-        anchors.bottomMargin: 20
+        anchors.bottom: tryAgainButton.top
         anchors.horizontalCenter: parent.horizontalCenter
 
         horizontalAlignment: Text.AlignHCenter
@@ -19,13 +18,13 @@ Item {
         font.weight: textFont.font.weight
         font.pixelSize: 12
 
-        text: "Необходимо войти в аккаунт, чтобы\nприложение могло получить доступ\nк вашим устройствам"
+        text: "Не удалось войти в аккаунт Яндекс!"
     }
 
     Components.Button {
-        id: loginButton
+        id: tryAgainButton
 
-        text: "Войти в аккаунт Яндекс"
+        text: "Попробовать ещё раз"
 
         width: 180
         height: 28
@@ -33,7 +32,8 @@ Item {
         anchors.centerIn: parent
 
         onClicked: {
-            yandexOAuth.grant();
+            yandexAccount.askInfo();
+            stack.currentIndex = 0;
         }
     }
 }

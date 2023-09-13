@@ -19,7 +19,8 @@ YandexDeviceData YandexLamp::getDeviceData()
         .id =  deviceId,
         .name = deviceName,
         .state = getState(),
-        .brightness = getBrightness()
+        .brightness = getBrightness(),
+        .online = isOnline()
     };
 }
 

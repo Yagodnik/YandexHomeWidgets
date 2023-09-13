@@ -13,7 +13,7 @@ Window {
     width: 300
     height: 365
     visible: false
-    flags: Qt.FramelessWindowHint
+    flags: Qt.FramelessWindowHint | Qt.Popup
     color: "transparent"
 
     DevicesModel {
@@ -43,8 +43,8 @@ Window {
         yandexAccount.askInfo();
     }
 
-    onActiveChanged: {
-        if (!active) {
+    onActiveFocusItemChanged: {
+        if (!activeFocusItem) {
             window.hide();
         }
     }
@@ -65,10 +65,18 @@ Window {
             stack.currentIndex = 2;
         }
 
-        function onError() {
-            stack.currentIndex = 1;
-
-            console.log("Error during log in");
+        function onError(errorCode) {
+            switch (errorCode) {
+            case 2:
+                stack.currentIndex = 3;
+                break;
+            case 1:
+                stack.currentIndex = 1;
+                break;
+            case 0:
+                stack.currentIndex = 3;
+                break;
+            }
         }
     }
 
@@ -77,8 +85,8 @@ Window {
 
         function onGranted() {
             yandexOAuth.saveToken(yandexOAuth.getToken());
-            yandexAccount.askInfo();
             yandexHome.loadDevices();
+            yandexAccount.askInfo();
 
             stack.currentIndex = 2;
         }
@@ -153,6 +161,10 @@ Window {
 
         Pages.Home {
             id: home
+        }
+
+        Pages.Error {
+            id: error
         }
     }
 }

@@ -19,6 +19,7 @@ public:
     explicit YandexHome(QObject *parent = nullptr);
     ~YandexHome();
 
+    Q_INVOKABLE void clearDevices();
     Q_INVOKABLE void loadDevices();
     Q_INVOKABLE void setWatcherState(bool state);
 

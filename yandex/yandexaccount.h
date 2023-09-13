@@ -24,7 +24,7 @@ public:
 
 signals:
     void infoReady();
-    void error();
+    void error(int errorCode);
 
 private:
     QNetworkAccessManager *networkManager;

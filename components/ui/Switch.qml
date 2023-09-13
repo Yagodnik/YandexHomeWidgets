@@ -7,7 +7,7 @@ Item {
     signal clicked
 
     onValueChanged: {
-        root.state === "on" ? root.state = "off" : root.state = "on";
+        !value ? root.state = "off" : root.state = "on";
     }
 
     Rectangle {

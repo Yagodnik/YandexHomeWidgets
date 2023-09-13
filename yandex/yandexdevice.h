@@ -21,6 +21,7 @@ public:
 
     QString getName();
     QString getId();
+    bool isOnline();
 
     virtual void update() = 0;
 
@@ -29,12 +30,18 @@ public:
     void markAsUpdated();
     void markAsUnupdated();
 
+    void test() {
+        emit updateFinished(getId());
+    }
+
 signals:
     void actionFinished();
 
 protected:
     QString deviceId;
     QString deviceName;
+    bool deviceOnline;
+
     QNetworkAccessManager *networkManager;
 
     bool updated;

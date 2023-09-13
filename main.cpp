@@ -14,7 +14,8 @@
 // TODO: Ask for max and min temp values and supported color model
 // TODO: Check for memory leaks
 // TODO: Add offline mark to lamp
-// TODO: Clear devices when logout
+// TODO: Fix bug with doubleclick
+// TODO: Bug if start app without wifi it wont log in
 
 int main(int argc, char *argv[])
 {

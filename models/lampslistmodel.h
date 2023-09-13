@@ -17,6 +17,7 @@ public:
         TextRole = Qt::UserRole + 1,
         StateRole = Qt::UserRole + 2,
         BrightnessRole = Qt::UserRole + 3,
+        OnlineRole = Qt::UserRole + 4,
         IdRole
     };
 

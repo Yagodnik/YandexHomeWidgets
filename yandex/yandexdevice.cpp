@@ -26,6 +26,11 @@ QString YandexDevice::getId()
     return deviceId;
 }
 
+bool YandexDevice::isOnline()
+{
+    return deviceOnline;
+}
+
 bool YandexDevice::isUpdated()
 {
     return updated;
@@ -65,9 +70,15 @@ void YandexDevice::sendPostRequest(QByteArray data)
     QNetworkReply *reply = networkManager->post(request, data);
 
     connect(reply, &QNetworkReply::finished, [=]() {
-        emit actionFinished();
+//        if (reply->error() == QNetworkReply::NoError) {
+//            deviceOnline = true;
+//        } else {
+//            deviceOnline = false;
+//        }
 
         reply->deleteLater();
+
+        emit actionFinished();
     });
 }
 
@@ -86,6 +97,7 @@ void YandexDevice::getFullInfo()
 
     connect(reply, &QNetworkReply::finished, [=]() {
         if (reply->error() == QNetworkReply::NoError) {
+//            deviceOnline = true;
             QByteArray response = reply->readAll();
 
             QJsonDocument document = QJsonDocument::fromJson(response);
@@ -94,7 +106,7 @@ void YandexDevice::getFullInfo()
 
             emit infoReady(capabilities);
         } else {
-//            qDebug() << "Error with device" << deviceId << "cant get capabilities!";
+//            deviceOnline = false;
         }
 
         reply->deleteLater();

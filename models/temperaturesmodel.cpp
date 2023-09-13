@@ -40,3 +40,8 @@ QHash<int, QByteArray> TemperaturesModel::roleNames() const
     roles[IdRole] = "colorId";
 
     return roles;}
+
+void TemperaturesModel::setLimits(int min, int max)
+{
+    qDebug() << "Min:" << min << "; Max:" << max;
+}

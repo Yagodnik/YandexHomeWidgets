@@ -17,6 +17,11 @@ YandexHome::~YandexHome()
     watcher->deleteLater();
 }
 
+void YandexHome::clearDevices()
+{
+    devices->clear();
+}
+
 void YandexHome::loadDevices()
 {
     Secrets *secrets = Secrets::getInstance();
@@ -40,6 +45,8 @@ void YandexHome::loadDevices()
             QJsonArray devices = jsonObject["devices"].toArray();
 
             foreach (QJsonValueRef ref, devices) {
+                qDebug() << "Parsinnnng!";
+
                 QJsonObject currentDevice = ref.toObject();
                 QString deviceType = currentDevice["type"].toString();
 
@@ -52,7 +59,6 @@ void YandexHome::loadDevices()
                     connect(lamp, &YandexLamp::actionFinished,
                             this, &YandexHome::onActionFinished);
 
-                    this->devices->add(lamp);
                     this->devices->add(lamp);
                 }
             }
@@ -103,7 +109,7 @@ void YandexHome::setBrightness(QString deviceId, int brightness)
     if (brightness == 0)
         brightness = 1;
 
-//    watcher->pause();
+    watcher->pause();
     lamp->setBrightness(brightness);
 }
 

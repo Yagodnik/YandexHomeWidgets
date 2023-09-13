@@ -38,7 +38,22 @@ void YandexAccount::askInfo()
         } else {
             qDebug() << "Error occured during getting account info:" << reply->errorString();
 
-            emit error();
+            qDebug() << reply->error();
+
+            switch (reply->error()) {
+            case QNetworkReply::AuthenticationRequiredError:
+                emit error(1);
+                break;
+            case QNetworkReply::UnknownNetworkError:
+                emit error(2);
+                break;
+            case QNetworkReply::HostNotFoundError:
+                emit error(2);
+                break;
+            default:
+                emit error(0);
+                break;
+            }
         }
 
         reply->deleteLater();

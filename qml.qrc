@@ -11,18 +11,22 @@
         <file>assets/icons8-logout-24.png</file>
         <file>assets/logout.png</file>
         <file>assets/lamp.png</file>
-        <file>components/Panel.qml</file>
-        <file>components/Button.qml</file>
-        <file>components/Avatar.qml</file>
-        <file>components/Splitter.qml</file>
         <file>assets/icons8-arrow-24.png</file>
-        <file>components/Switch.qml</file>
-        <file>components/Slider.qml</file>
-        <file>components/ColorPicker.qml</file>
         <file>pages/Loading.qml</file>
         <file>pages/Login.qml</file>
         <file>pages/Home.qml</file>
         <file>assets/temperatures.json</file>
         <file>assets/web/callback.html</file>
+        <file>components/ui/Avatar.qml</file>
+        <file>components/ui/Button.qml</file>
+        <file>components/ui/ColorPicker.qml</file>
+        <file>components/ui/Panel.qml</file>
+        <file>components/ui/Slider.qml</file>
+        <file>components/ui/Splitter.qml</file>
+        <file>components/ui/Switch.qml</file>
+        <file>components/app/DeviceDelegate.qml</file>
+        <file>components/app/DevicesHeader.qml</file>
+        <file>components/app/Header.qml</file>
+        <file>pages/Error.qml</file>
     </qresource>
 </RCC>

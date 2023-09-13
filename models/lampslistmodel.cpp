@@ -39,6 +39,8 @@ QVariant LampsListModel::data(const QModelIndex &index, int role) const
         return data.state;
     case BrightnessRole:
         return data.brightness;
+    case OnlineRole:
+        return data.online;
     default:
         return QVariant();
     }
@@ -52,6 +54,7 @@ QHash<int, QByteArray> LampsListModel::roleNames() const
     roles[IdRole] = "deviceId";
     roles[StateRole] = "deviceState";
     roles[BrightnessRole] = "deviceBrightness";
+    roles[OnlineRole] = "deviceOnline";
 
     return roles;
 }
