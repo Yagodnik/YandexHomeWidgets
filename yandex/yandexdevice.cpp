@@ -8,7 +8,7 @@ YandexDevice::YandexDevice(QString deviceId, QString deviceName, QObject *parent
     this->deviceName = deviceName;
     updated = false;
 
-    networkManager = new QNetworkAccessManager(this);
+    networkManager = new QNetworkAccessManager();
 }
 
 YandexDevice::~YandexDevice()
@@ -70,11 +70,11 @@ void YandexDevice::sendPostRequest(QByteArray data)
     QNetworkReply *reply = networkManager->post(request, data);
 
     connect(reply, &QNetworkReply::finished, [=]() {
-//        if (reply->error() == QNetworkReply::NoError) {
-//            deviceOnline = true;
-//        } else {
-//            deviceOnline = false;
-//        }
+        if (reply->error() == QNetworkReply::NoError) {
+            deviceOnline = true;
+        } else {
+            deviceOnline = false;
+        }
 
         reply->deleteLater();
 
@@ -97,7 +97,7 @@ void YandexDevice::getFullInfo()
 
     connect(reply, &QNetworkReply::finished, [=]() {
         if (reply->error() == QNetworkReply::NoError) {
-//            deviceOnline = true;
+            deviceOnline = true;
             QByteArray response = reply->readAll();
 
             QJsonDocument document = QJsonDocument::fromJson(response);
@@ -105,8 +105,9 @@ void YandexDevice::getFullInfo()
             QJsonArray capabilities = root["capabilities"].toArray();
 
             emit infoReady(capabilities);
-        } else {
-//            deviceOnline = false;
+        } else if (reply->error() == QNetworkReply::HostNotFoundError ||
+                   reply->error() == QNetworkReply::UnknownNetworkError){
+            deviceOnline = false;
         }
 
         reply->deleteLater();

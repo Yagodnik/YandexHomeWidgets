@@ -6,7 +6,7 @@ YandexWatcher::YandexWatcher(QObject *parent): QObject(parent) {
     blocked = false;
 
     // MEMORY LEAK HERE!
-//    connect(&timer, &QTimer::timeout, this, &YandexWatcher::onTriggered);
+    connect(&timer, &QTimer::timeout, this, &YandexWatcher::onTriggered);
 }
 
 void YandexWatcher::pause()

@@ -133,7 +133,7 @@ Window {
 
         menu: Menu {
             MenuItem {
-                text: qsTr("Закрыть окно")
+                text: qsTr("Закрыть приложение")
                 onTriggered: Qt.quit()
             }
 

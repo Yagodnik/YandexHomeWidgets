@@ -19,6 +19,7 @@ public:
     QString getDisplayColor(int index);
     int getTemperature(int index);
     int getTemperaturesCount();
+    void configure(int min, int max);
 
 private:
     QList<QPair<int, QColor>> temperatures;

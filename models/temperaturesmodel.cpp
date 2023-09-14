@@ -39,9 +39,12 @@ QHash<int, QByteArray> TemperaturesModel::roleNames() const
     roles[DisplayColor] = "displayColor";
     roles[IdRole] = "colorId";
 
-    return roles;}
+    return roles;
+}
 
 void TemperaturesModel::setLimits(int min, int max)
 {
-    qDebug() << "Min:" << min << "; Max:" << max;
+    temperatures->configure(min, max);
+
+    emit layoutChanged();
 }

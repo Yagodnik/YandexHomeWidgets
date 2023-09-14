@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import "../ui" as Components
+import Yandex 1.0
 
 Item {
     id: delegate
@@ -186,21 +187,19 @@ Item {
         }
     }
 
-//    property var myTempModel: temperaturesModel
+    TemperaturesModel {
+        id: temperaturesModel
 
-//    Component.onCompleted: {
-//        myTempModel.setLimits(100, 500);
-//    }
+        Component.onCompleted: {
+            setLimits(yandexHome.minTemperature(deviceId),
+                      yandexHome.maxTemperature(deviceId));
+        }
+    }
 
-    // How to check supported temperatures with this stupid model!!!!!!!!!!
-    // Provide model data according to device id (Asking about capabilities?)
-    // To kinda: model: TemperaturesModelBuilder.build(tempMin, tempMax)
-    // Colors model: Component.onCompleted: { if (deviceSupportsColor) show(); else hide(); }
     Components.ColorPicker {
         id: temperaturePicker
 
         model: temperaturesModel
-//        model: temperaturesModel
         valueRole: "temperatureValue"
         displayRole: "displayColor"
 

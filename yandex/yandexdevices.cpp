@@ -60,6 +60,10 @@ bool YandexDevices::isEmpty()
 
 void YandexDevices::clear()
 {
+    foreach (YandexDevice *device, devices) {
+        device->deleteLater();
+    }
+
     devices.clear();
 }
 

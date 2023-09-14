@@ -11,11 +11,10 @@
 #include "yandex/yandexaccount.h"
 #include "3rdparty/desktopfeatures.h"
 
-// TODO: Ask for max and min temp values and supported color model
 // TODO: Check for memory leaks
-// TODO: Add offline mark to lamp
-// TODO: Fix bug with doubleclick
-// TODO: Bug if start app without wifi it wont log in
+// TODO: Refactor yandex home class.
+// Just withId method and then working only with what it will return
+// TODO: Check if port is free in YandexOAuth class
 
 int main(int argc, char *argv[])
 {
@@ -27,18 +26,16 @@ int main(int argc, char *argv[])
     YandexAccount account;
     YandexOAuth oauth;
     ColorsModel colorModel;
-    TemperaturesModel temperaturesModel;
     DesktopFeatures desktopFeatures;
 
     QQmlApplicationEngine engine;
-
     QQmlContext *context = engine.rootContext();
 
     qmlRegisterType<YandexHome>("Yandex", 1, 0, "YandexHome");
     qmlRegisterType<LampsListModel>("Yandex", 1, 0, "DevicesModel");
+    qmlRegisterType<TemperaturesModel>("Yandex", 1, 0, "TemperaturesModel");
 
     context->setContextProperty("colorModel", &colorModel);
-    context->setContextProperty("temperaturesModel", &temperaturesModel);
     context->setContextProperty("yandexOAuth", &oauth);
     context->setContextProperty("yandexAccount", &account);
     context->setContextProperty("desktopFeatures", &desktopFeatures);

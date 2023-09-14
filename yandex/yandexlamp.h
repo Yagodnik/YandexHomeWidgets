@@ -20,13 +20,13 @@
 
 class YandexLamp : public YandexDevice
 {
+    Q_PROPERTY(int temperatureMin MEMBER temperatureMin)
 public:
-    typedef enum {
-        HSV, RGB, TEMPERATURES
-    } ColorModel;
-
     explicit YandexLamp(QString deviceId,
-                        QString deviceName);
+                        QString deviceName,
+                        int tMin = 1500,
+                        int tMax = 6500,
+                        ColorModel colorModel = HSV);
     ~YandexLamp();
 
     YandexDeviceData getDeviceData();
@@ -40,10 +40,16 @@ public:
     void setColor(QRgb color);
     void setTemperature(int temperature);
 
+    int getMinTemperature();
+    int getMaxTemperature();
+
 private:
     bool state;
     int brightness;
     ColorModel colorModel;
+
+    int temperatureMin;
+    int temperatureMax;
 
 private slots:
     void onInfoReady(QJsonArray capabilities);

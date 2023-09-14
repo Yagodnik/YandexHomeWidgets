@@ -28,7 +28,8 @@ public:
     Q_INVOKABLE void setColor(QString deviceId, QString color);
     Q_INVOKABLE void setTemperature(QString deviceId, int temperature);
 
-    Q_INVOKABLE void getSupportedColors(){}
+    Q_INVOKABLE int minTemperature(QString deviceId);
+    Q_INVOKABLE int maxTemperature(QString deviceId);
 
 signals:
     void devicesLoaded(int result);

@@ -41,20 +41,49 @@ void YandexHome::loadDevices()
 
             QJsonDocument jsonResponse = QJsonDocument::fromJson(response);
             QJsonObject jsonObject = jsonResponse.object();
-
             QJsonArray devices = jsonObject["devices"].toArray();
 
-            foreach (QJsonValueRef ref, devices) {
-                qDebug() << "Parsinnnng!";
+            clearDevices();
 
+            foreach (QJsonValueRef ref, devices) {
                 QJsonObject currentDevice = ref.toObject();
                 QString deviceType = currentDevice["type"].toString();
 
                 if (deviceType == "devices.types.light") {
+                    // TODO: Move to class
                     QString lampId = currentDevice["id"].toString();
                     QString lampName = currentDevice["name"].toString();
+                    int temperatureMin = 0, temperatureMax = 0;
+                    ColorModel colorModel = DEFAULT;
 
-                    YandexLamp *lamp = new YandexLamp(lampId, lampName);
+                    QJsonArray capabilities = currentDevice["capabilities"].toArray();
+                    foreach (QJsonValueRef ref, capabilities) {
+                        QJsonObject capability = ref.toObject();
+                        QJsonObject parameters = capability["parameters"].toObject();
+
+                        if (capability["type"] == "devices.capabilities.color_setting") {
+                            QJsonObject temperatures = parameters["temperature_k"].toObject();
+                            QString colorModelString = parameters["color_model"].toString();
+
+                            temperatureMin = temperatures["min"].toInt();
+                            temperatureMax = temperatures["max"].toInt();
+
+                            if (colorModelString == "hsv") colorModel = HSV;
+                            else if (colorModelString == "rgb") colorModel = RGB;
+                        }
+                    }
+
+                    YandexLamp *lamp = new YandexLamp(lampId,
+                                                      lampName,
+                                                      temperatureMin,
+                                                      temperatureMax,
+                                                      colorModel);
+
+                    if (lamp == nullptr) {
+                        qDebug() << "Cant create device" << lampName << ";" << lampId;
+                        lamp->deleteLater();
+                        continue;
+                    }
 
                     connect(lamp, &YandexLamp::actionFinished,
                             this, &YandexHome::onActionFinished);
@@ -139,6 +168,16 @@ void YandexHome::setTemperature(QString deviceId, int temperature)
 
 //    watcher->pause();
     lamp->setTemperature(temperature);
+}
+
+int YandexHome::minTemperature(QString deviceId)
+{
+    return ((YandexLamp*) devices->withId(deviceId))->getMinTemperature();
+}
+
+int YandexHome::maxTemperature(QString deviceId)
+{
+    return ((YandexLamp*) devices->withId(deviceId))->getMaxTemperature();
 }
 
 void YandexHome::onActionFinished()

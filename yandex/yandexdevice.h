@@ -30,10 +30,6 @@ public:
     void markAsUpdated();
     void markAsUnupdated();
 
-    void test() {
-        emit updateFinished(getId());
-    }
-
 signals:
     void actionFinished();
 

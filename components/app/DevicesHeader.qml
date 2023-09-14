@@ -41,7 +41,7 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
 
         onClicked: {
-            yandexHome.clearDevices();
+//            yandexHome.clearDevices();
             yandexHome.loadDevices();
         }
     }

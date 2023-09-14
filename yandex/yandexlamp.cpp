@@ -1,9 +1,14 @@
 #include "yandexlamp.h"
 
 YandexLamp::YandexLamp(QString deviceId,
-                       QString deviceName) : YandexDevice(deviceId, deviceName, nullptr)
+                       QString deviceName,
+                       int tMin,
+                       int tMax,
+                       ColorModel colorModel) : YandexDevice(deviceId, deviceName, nullptr)
 {
-    // ASK BASIC INFO SUCH AS COLOR MODEL!
+    temperatureMin = tMin;
+    temperatureMax = tMax;
+    this->colorModel = colorModel;
 
     connect(this, &YandexDevice::infoReady, this, &YandexLamp::onInfoReady);
 }
@@ -57,6 +62,16 @@ void YandexLamp::setColor(QRgb color)
 void YandexLamp::setTemperature(int temperature)
 {
     generateRequest(ColorSetting::generate(temperature));
+}
+
+int YandexLamp::getMinTemperature()
+{
+    return temperatureMin;
+}
+
+int YandexLamp::getMaxTemperature()
+{
+    return temperatureMax;
 }
 
 void YandexLamp::onInfoReady(QJsonArray capabilities)
