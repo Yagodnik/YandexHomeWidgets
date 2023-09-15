@@ -9,6 +9,14 @@ class YandexDevices: public QObject
 {
     Q_OBJECT
 public:
+//    static YandexDevices *instance()
+//    {
+//        if (!sInstance) {
+//            sInstance = new YandexDevices();
+//        }
+//        return sInstance;
+//    }
+
     static YandexDevices *getInstance();
 
     void add(YandexDevice *device);
@@ -25,6 +33,8 @@ signals:
 
 private:
     QList<YandexDevice*> devices;
+
+    static YandexDevices *sInstance;
 
     YandexDevices();
     ~YandexDevices();

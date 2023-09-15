@@ -24,9 +24,9 @@
         <file>components/ui/Slider.qml</file>
         <file>components/ui/Splitter.qml</file>
         <file>components/ui/Switch.qml</file>
-        <file>components/app/DeviceDelegate.qml</file>
         <file>components/app/DevicesHeader.qml</file>
         <file>components/app/Header.qml</file>
         <file>pages/Error.qml</file>
+        <file>devices/light/LightDelegate.qml</file>
     </qresource>
 </RCC>

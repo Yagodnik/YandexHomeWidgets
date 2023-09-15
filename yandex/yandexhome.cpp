@@ -3,18 +3,15 @@
 YandexHome::YandexHome(QObject *parent)
     : QObject{parent}
 {
-    networkAccessManager = new QNetworkAccessManager(this);
     devices = YandexDevices::getInstance();
-    watcher = new YandexWatcher();
+    watcher = new YandexWatcher(this);
 
     watcher->pause();
 }
 
 YandexHome::~YandexHome()
 {
-    networkAccessManager->deleteLater();
     devices->deleteLater();
-    watcher->deleteLater();
 }
 
 void YandexHome::clearDevices()
@@ -33,7 +30,7 @@ void YandexHome::loadDevices()
     request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
     request.setRawHeader("Authorization", authorizationHeader.toLocal8Bit());
 
-    QNetworkReply *reply = networkAccessManager->get(request);
+    QNetworkReply *reply = networkAccessManager.get(request);
 
     connect(reply, &QNetworkReply::finished, [=]() {
         if (reply->error() == QNetworkReply::NoError) {
@@ -81,7 +78,6 @@ void YandexHome::loadDevices()
 
                     if (lamp == nullptr) {
                         qDebug() << "Cant create device" << lampName << ";" << lampId;
-                        lamp->deleteLater();
                         continue;
                     }
 
@@ -111,73 +107,6 @@ void YandexHome::setWatcherState(bool state)
 {
     if (state) watcher->resume();
     else watcher->pause();
-}
-
-void YandexHome::setState(QString deviceId, bool state)
-{    
-    YandexLamp *lamp = (YandexLamp*) devices->withId(deviceId);
-
-    if (lamp == nullptr) {
-        emit lampError(deviceId);
-        return;
-    }
-
-    watcher->pause();
-    lamp->setState(state);
-}
-
-void YandexHome::setBrightness(QString deviceId, int brightness)
-{
-    YandexLamp *lamp = (YandexLamp*) devices->withId(deviceId);
-
-    if (lamp == nullptr) {
-        emit lampError(deviceId);
-        return;
-    }
-
-    if (brightness == 0)
-        brightness = 1;
-
-    watcher->pause();
-    lamp->setBrightness(brightness);
-}
-
-void YandexHome::setColor(QString deviceId, QString color)
-{
-    YandexLamp *lamp = (YandexLamp*) devices->withId(deviceId);
-
-    if (lamp == nullptr) {
-        emit lampError(deviceId);
-        return;
-    }
-
-//    watcher->pause();
-    QRgb _color = QColor(color).rgb();
-    lamp->setColor(_color);
-}
-
-void YandexHome::setTemperature(QString deviceId, int temperature)
-{
-
-    YandexLamp *lamp = (YandexLamp*) devices->withId(deviceId);
-
-    if (lamp == nullptr) {
-        emit lampError(deviceId);
-        return;
-    }
-
-//    watcher->pause();
-    lamp->setTemperature(temperature);
-}
-
-int YandexHome::minTemperature(QString deviceId)
-{
-    return ((YandexLamp*) devices->withId(deviceId))->getMinTemperature();
-}
-
-int YandexHome::maxTemperature(QString deviceId)
-{
-    return ((YandexLamp*) devices->withId(deviceId))->getMaxTemperature();
 }
 
 void YandexHome::onActionFinished()

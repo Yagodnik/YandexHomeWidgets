@@ -3,7 +3,7 @@
 TemperaturesModel::TemperaturesModel(QObject *parent)
     : QAbstractListModel{parent}
 {
-    temperatures = new Temperatures();
+    temperatures = new Temperatures(this);
 }
 
 TemperaturesModel::~TemperaturesModel()

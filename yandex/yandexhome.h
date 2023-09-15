@@ -23,13 +23,9 @@ public:
     Q_INVOKABLE void loadDevices();
     Q_INVOKABLE void setWatcherState(bool state);
 
-    Q_INVOKABLE void setState(QString deviceId, bool state);
-    Q_INVOKABLE void setBrightness(QString deviceId, int brightness);
-    Q_INVOKABLE void setColor(QString deviceId, QString color);
-    Q_INVOKABLE void setTemperature(QString deviceId, int temperature);
-
-    Q_INVOKABLE int minTemperature(QString deviceId);
-    Q_INVOKABLE int maxTemperature(QString deviceId);
+    Q_INVOKABLE YandexLamp* withId(QString id) {
+        return static_cast<YandexLamp*>(devices->withId(id));
+    }
 
 signals:
     void devicesLoaded(int result);
@@ -37,7 +33,7 @@ signals:
     void devicesUpdated();
 
 private:
-    QNetworkAccessManager *networkAccessManager;
+    QNetworkAccessManager networkAccessManager;
     YandexDevices *devices;
     YandexWatcher *watcher;
 

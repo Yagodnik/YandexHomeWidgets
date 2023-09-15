@@ -14,11 +14,8 @@ class LampsListModel : public QAbstractListModel
     Q_OBJECT
 public:
     enum Roles {
-        TextRole = Qt::UserRole + 1,
-        StateRole = Qt::UserRole + 2,
-        BrightnessRole = Qt::UserRole + 3,
-        OnlineRole = Qt::UserRole + 4,
-        IdRole
+        TypeRole = Qt::UserRole + 1,
+        DataRole = Qt::UserRole + 2
     };
 
     LampsListModel(QObject *parent = nullptr);

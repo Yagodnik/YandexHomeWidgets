@@ -1,32 +1,31 @@
 #include "yandexoauth.h"
 
 YandexOAuth::YandexOAuth(QObject *parent)
-    : QObject{parent}
+    : QObject{parent}, replyHandler(1337)
 {
-    replyHandler = new QOAuthHttpServerReplyHandler(1337, this);
-    oauth2 = new QOAuth2AuthorizationCodeFlow(this);
+//    replyHandler = new QOAuthHttpServerReplyHandler(1337, this);
 
     Secrets *secrets = Secrets::getInstance();
 
     token = secrets->get(OAUTH_TOKEN_NAME);
 
-    oauth2->setReplyHandler(replyHandler);
-    oauth2->setAuthorizationUrl(QUrl("https://oauth.yandex.ru/authorize"));
-    oauth2->setAccessTokenUrl(QUrl("https://oauth.yandex.ru/token?grant_type=authorization_code"));
-    oauth2->setClientIdentifier(secrets->get("client_id"));
-    oauth2->setClientIdentifierSharedKey(secrets->get("client_secret"));
-    oauth2->setScope("iot:view iot:control login:info login:avatar");
+    oauth2.setReplyHandler(&replyHandler);
+    oauth2.setAuthorizationUrl(QUrl("https://oauth.yandex.ru/authorize"));
+    oauth2.setAccessTokenUrl(QUrl("https://oauth.yandex.ru/token?grant_type=authorization_code"));
+    oauth2.setClientIdentifier(secrets->get("client_id"));
+    oauth2.setClientIdentifierSharedKey(secrets->get("client_secret"));
+    oauth2.setScope("iot:view iot:control login:info login:avatar");
 
-    replyHandler->setCallbackText(getCallbackContent());
+    replyHandler.setCallbackText(getCallbackContent());
 
-    connect(oauth2, &QOAuth2AuthorizationCodeFlow::statusChanged, [=](QAbstractOAuth::Status status) {
+    connect(&oauth2, &QOAuth2AuthorizationCodeFlow::statusChanged, [=](QAbstractOAuth::Status status) {
         if (status == QAbstractOAuth::Status::Granted) {
-            token = oauth2->token();
+            token = oauth2.token();
             emit granted();
         }
     });
 
-    connect(oauth2, &QOAuth2AuthorizationCodeFlow::authorizeWithBrowser, [=](QUrl url) {
+    connect(&oauth2, &QOAuth2AuthorizationCodeFlow::authorizeWithBrowser, [=](QUrl url) {
         QUrlQuery query(url);
         query.addQueryItem("response_type", "code");
         url.setQuery(query);
@@ -37,13 +36,13 @@ YandexOAuth::YandexOAuth(QObject *parent)
 
 YandexOAuth::~YandexOAuth()
 {
-    oauth2->deleteLater();
-    replyHandler->deleteLater();
+//    oauth2->deleteLater();
+//    replyHandler->deleteLater();
 }
 
 void YandexOAuth::grant()
 {
-    oauth2->grant();
+    oauth2.grant();
 }
 
 QString YandexOAuth::getToken()

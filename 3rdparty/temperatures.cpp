@@ -3,7 +3,7 @@
 Temperatures::Temperatures(QObject *parent)
     : QObject{parent}
 {
-    configure(0, 10000);
+    configure(1500, 9500);
 }
 
 QString Temperatures::getDisplayColor(int index)
@@ -45,8 +45,6 @@ void Temperatures::configure(int min, int max)
     QJsonDocument document = QJsonDocument::fromJson(content.toUtf8());
 
     QJsonArray root = document.array();
-
-    qDebug() << max << min;
 
     foreach(QJsonValueRef ref, root) {
         QJsonObject element = ref.toObject();

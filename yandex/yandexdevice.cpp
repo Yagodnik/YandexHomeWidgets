@@ -7,13 +7,10 @@ YandexDevice::YandexDevice(QString deviceId, QString deviceName, QObject *parent
     this->deviceId = deviceId;
     this->deviceName = deviceName;
     updated = false;
-
-    networkManager = new QNetworkAccessManager();
 }
 
 YandexDevice::~YandexDevice()
 {
-    networkManager->deleteLater();
 }
 
 QString YandexDevice::getName()
@@ -52,6 +49,11 @@ void YandexDevice::markAsUnupdated()
     updated = false;
 }
 
+QString YandexDevice::getDeviceType()
+{
+    return deviceType;
+}
+
 void YandexDevice::sendPostRequest(QByteArray data)
 {
     Secrets *secrets = Secrets::getInstance();
@@ -67,7 +69,7 @@ void YandexDevice::sendPostRequest(QByteArray data)
     request.setRawHeader("Authorization", authorizationHeader.toLocal8Bit());
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
-    QNetworkReply *reply = networkManager->post(request, data);
+    QNetworkReply *reply = networkManager.post(request, data);
 
     connect(reply, &QNetworkReply::finished, [=]() {
         if (reply->error() == QNetworkReply::NoError) {
@@ -93,7 +95,7 @@ void YandexDevice::getFullInfo()
     request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
     request.setRawHeader("Authorization", authorizationHeader.toLocal8Bit());
 
-    QNetworkReply *reply = networkManager->get(request);
+    QNetworkReply *reply = networkManager.get(request);
 
     connect(reply, &QNetworkReply::finished, [=]() {
         if (reply->error() == QNetworkReply::NoError) {

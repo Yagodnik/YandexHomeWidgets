@@ -11,7 +11,6 @@
 #include "yandex/yandexaccount.h"
 #include "3rdparty/desktopfeatures.h"
 
-// TODO: Check for memory leaks
 // TODO: Refactor yandex home class.
 // Just withId method and then working only with what it will return
 // TODO: Check if port is free in YandexOAuth class
@@ -31,6 +30,7 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     QQmlContext *context = engine.rootContext();
 
+    qmlRegisterType<YandexLamp>("Yandex", 1, 0, "YandexLamp");
     qmlRegisterType<YandexHome>("Yandex", 1, 0, "YandexHome");
     qmlRegisterType<LampsListModel>("Yandex", 1, 0, "DevicesModel");
     qmlRegisterType<TemperaturesModel>("Yandex", 1, 0, "TemperaturesModel");

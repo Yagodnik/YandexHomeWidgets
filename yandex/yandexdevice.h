@@ -23,6 +23,7 @@ public:
     QString getId();
     bool isOnline();
 
+    virtual QJsonObject getDeviceData() = 0;
     virtual void update() = 0;
 
     bool isUpdated();
@@ -30,18 +31,20 @@ public:
     void markAsUpdated();
     void markAsUnupdated();
 
+    QString getDeviceType();
+
 signals:
     void actionFinished();
 
 protected:
+    QString deviceType;
     QString deviceId;
     QString deviceName;
     bool deviceOnline;
-
-    QNetworkAccessManager *networkManager;
-
-    bool updated;
     bool haveChanges;
+    bool updated;
+
+    QNetworkAccessManager networkManager;    
 
     void sendPostRequest(QByteArray data);
     void getFullInfo();

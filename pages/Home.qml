@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import "../components/ui" as Components
 import "../components/app" as App
+import "../devices/light/" as Delegates
 
 Item {
     id: appPage
@@ -52,7 +53,13 @@ Item {
                 anchors.fill: parent
 
                 model: devicesModel
-                delegate: App.DeviceDelegate {}
+                delegate: Component {
+                    Loader {
+                        source: switch(deviceType) {
+                            case "devices.types.light": return "qrc:/devices/light/LightDelegate.qml"
+                        }
+                    }
+                }
             }
         }
     }

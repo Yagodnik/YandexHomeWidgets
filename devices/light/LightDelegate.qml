@@ -1,5 +1,5 @@
 import QtQuick 2.15
-import "../ui" as Components
+import "../../components/ui" as Components
 import Yandex 1.0
 
 Item {
@@ -77,7 +77,7 @@ Item {
         font.weight: textFont.font.weight
         font.pixelSize: 19
 
-        text: deviceName
+        text: deviceData["name"]
     }
 
     Components.Switch {
@@ -92,11 +92,12 @@ Item {
         anchors.topMargin: 6
 
         Binding on value {
-            value: deviceState
+            value: deviceData["state"]
         }
 
         onClicked: {
-            yandexHome.setState(deviceId, value);
+            yandexHome.setWatcherState(false);
+            yandexHome.withId(deviceData["id"]).setState(value);
         }
     }
 
@@ -110,7 +111,7 @@ Item {
         anchors.left: onOff.right
         anchors.leftMargin: 15
 
-        visible: !deviceOnline
+        visible: !deviceData["online"]
 
         Rectangle {
             anchors.fill: parent
@@ -179,11 +180,12 @@ Item {
         value: 1
 
         Binding on value {
-            value: deviceBrightness / 100.0
+            value: deviceData["brightness"] / 100.0
         }
 
         onNewValue: {
-            yandexHome.setBrightness(deviceId, value * 100);
+            yandexHome.setWatcherState(false);
+            yandexHome.withId(deviceData["id"]).setBrightness(value * 100);
         }
     }
 
@@ -191,8 +193,8 @@ Item {
         id: temperaturesModel
 
         Component.onCompleted: {
-            setLimits(yandexHome.minTemperature(deviceId),
-                      yandexHome.maxTemperature(deviceId));
+            setLimits(yandexHome.withId(deviceData["id"]).getMinTemperature(),
+                      yandexHome.withId(deviceData["id"]).getMaxTemperature());
         }
     }
 
@@ -213,7 +215,7 @@ Item {
         anchors.rightMargin: 12
 
         onClicked: {
-            yandexHome.setTemperature(deviceId, currentColor);
+            yandexHome.withId(deviceData["id"]).setTemperature(currentColor);
         }
     }
 
@@ -232,7 +234,7 @@ Item {
         anchors.rightMargin: 12
 
         onClicked: {
-            yandexHome.setColor(deviceId, currentColor);
+            yandexHome.withId(deviceData["id"]).setColor(currentColor);
         }
     }
 }

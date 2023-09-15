@@ -3,12 +3,6 @@
 YandexAccount::YandexAccount(QObject *parent)
     : QObject{parent}
 {
-    networkManager = new QNetworkAccessManager(this);
-}
-
-YandexAccount::~YandexAccount()
-{
-    networkManager->deleteLater();
 }
 
 void YandexAccount::askInfo()
@@ -22,7 +16,7 @@ void YandexAccount::askInfo()
     request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
     request.setRawHeader("Authorization", authorizationHeader.toLocal8Bit());
 
-    QNetworkReply *reply = networkManager->get(request);
+    QNetworkReply *reply = networkManager.get(request);
 
     connect(reply, &QNetworkReply::finished, [=]() {
         if(reply->error() == QNetworkReply::NoError) {

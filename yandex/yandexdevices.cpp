@@ -1,5 +1,7 @@
 #include "yandexdevices.h"
 
+class YandexDevices *YandexDevices::sInstance = 0;
+
 YandexDevices::YandexDevices() {}
 
 YandexDevices::~YandexDevices()
@@ -11,9 +13,10 @@ YandexDevices::~YandexDevices()
 
 YandexDevices *YandexDevices::getInstance()
 {
-    static YandexDevices instance;
+    if (!sInstance)
+        sInstance = new YandexDevices();
 
-    return &instance;
+    return sInstance;
 }
 
 void YandexDevices::add(YandexDevice *device)
@@ -60,6 +63,7 @@ bool YandexDevices::isEmpty()
 
 void YandexDevices::clear()
 {
+
     foreach (YandexDevice *device, devices) {
         device->deleteLater();
     }

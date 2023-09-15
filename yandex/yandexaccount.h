@@ -16,7 +16,6 @@ class YandexAccount : public QObject
     Q_OBJECT
 public:
     explicit YandexAccount(QObject *parent = nullptr);
-    ~YandexAccount();
 
     Q_INVOKABLE void askInfo();
     Q_INVOKABLE QString getName();
@@ -27,7 +26,7 @@ signals:
     void error(int errorCode);
 
 private:
-    QNetworkAccessManager *networkManager;
+    QNetworkAccessManager networkManager;
 
     QString name;
     QString avatarId;

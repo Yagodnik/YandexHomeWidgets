@@ -12,7 +12,6 @@
 #include <QRgb>
 #include "3rdparty/constants.h"
 #include "3rdparty/secrets.h"
-#include "yandex/yandexdevicedata.h"
 #include "yandexdevice.h"
 #include "capabilities/onoff.h"
 #include "capabilities/range.h"
@@ -20,36 +19,34 @@
 
 class YandexLamp : public YandexDevice
 {
-    Q_PROPERTY(int temperatureMin MEMBER temperatureMin)
+    Q_OBJECT
+    Q_PROPERTY(QString deviceId MEMBER deviceId)
 public:
     explicit YandexLamp(QString deviceId,
                         QString deviceName,
                         int tMin = 1500,
                         int tMax = 6500,
                         ColorModel colorModel = HSV);
-    ~YandexLamp();
 
-    YandexDeviceData getDeviceData();
+    QJsonObject getDeviceData();
     void update();
 
     bool getState();
     int getBrightness();
 
-    void setState(bool state);
-    void setBrightness(int brightness);
-    void setColor(QRgb color);
-    void setTemperature(int temperature);
-
-    int getMinTemperature();
-    int getMaxTemperature();
+    Q_INVOKABLE void setState(bool state);
+    Q_INVOKABLE void setBrightness(int brightness);
+    Q_INVOKABLE void setColor(QString color);
+    Q_INVOKABLE void setTemperature(int temperature);
+    Q_INVOKABLE int getMinTemperature();
+    Q_INVOKABLE int getMaxTemperature();
 
 private:
     bool state;
     int brightness;
-    ColorModel colorModel;
-
     int temperatureMin;
     int temperatureMax;
+    ColorModel colorModel;
 
 private slots:
     void onInfoReady(QJsonArray capabilities);

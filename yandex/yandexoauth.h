@@ -26,8 +26,8 @@ signals:
     void granted();
 
 private:
-    QOAuth2AuthorizationCodeFlow *oauth2;
-    QOAuthHttpServerReplyHandler *replyHandler;
+    QOAuth2AuthorizationCodeFlow oauth2;
+    QOAuthHttpServerReplyHandler replyHandler;
     QString token;
 
     QString getCallbackContent();

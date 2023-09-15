@@ -9,24 +9,22 @@ YandexLamp::YandexLamp(QString deviceId,
     temperatureMin = tMin;
     temperatureMax = tMax;
     this->colorModel = colorModel;
+    deviceType = "devices.types.light";
 
     connect(this, &YandexDevice::infoReady, this, &YandexLamp::onInfoReady);
 }
 
-YandexLamp::~YandexLamp()
+QJsonObject YandexLamp::getDeviceData()
 {
-    networkManager->deleteLater();
-}
+    QJsonObject data;
 
-YandexDeviceData YandexLamp::getDeviceData()
-{
-    return YandexDeviceData {
-        .id =  deviceId,
-        .name = deviceName,
-        .state = getState(),
-        .brightness = getBrightness(),
-        .online = isOnline()
-    };
+    data["id"] = deviceId;
+    data["name"] = deviceName;
+    data["state"] = getState();
+    data["brightness"] = getBrightness();
+    data["online"] = isOnline();
+
+    return data;
 }
 
 void YandexLamp::update()
@@ -54,9 +52,9 @@ void YandexLamp::setBrightness(int brightness)
     generateRequest(Range::generate(brightness));
 }
 
-void YandexLamp::setColor(QRgb color)
+void YandexLamp::setColor(QString color)
 {
-    generateRequest(ColorSetting::generate(color));
+    generateRequest(ColorSetting::generate(QColor(color).rgb()));
 }
 
 void YandexLamp::setTemperature(int temperature)
@@ -79,6 +77,7 @@ void YandexLamp::onInfoReady(QJsonArray capabilities)
     foreach (QJsonValueRef ref, capabilities) {
         QJsonObject capability = ref.toObject();
 
+        // TODO: Create a generelisation method for Yandex Device
         if (capability["type"] == "devices.capabilities.on_off") {
             QJsonObject state = capability["state"].toObject();
 

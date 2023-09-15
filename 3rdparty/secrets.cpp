@@ -1,6 +1,7 @@
 #include "secrets.h"
 
-Secrets::Secrets(): settings("ArtemYagodnik", "YandexLampTray") {}
+Secrets::Secrets(): settings("ArtemYagodnik", "YandexLampTray") {
+}
 
 Secrets *Secrets::getInstance()
 {

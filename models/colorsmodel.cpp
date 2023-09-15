@@ -3,7 +3,7 @@
 ColorsModel::ColorsModel(QObject *parent)
     : QAbstractListModel{parent}
 {
-    colors = new Colors();
+    colors = new Colors(this);
 }
 
 ColorsModel::~ColorsModel()
