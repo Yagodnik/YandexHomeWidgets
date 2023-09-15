@@ -22,10 +22,7 @@ public:
     Q_INVOKABLE void clearDevices();
     Q_INVOKABLE void loadDevices();
     Q_INVOKABLE void setWatcherState(bool state);
-
-    Q_INVOKABLE YandexLamp* withId(QString id) {
-        return static_cast<YandexLamp*>(devices->withId(id));
-    }
+    Q_INVOKABLE YandexDevice* withId(QString id);
 
 signals:
     void devicesLoaded(int result);

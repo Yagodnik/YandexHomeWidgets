@@ -109,6 +109,11 @@ void YandexHome::setWatcherState(bool state)
     else watcher->pause();
 }
 
+YandexDevice *YandexHome::withId(QString id)
+{
+    return devices->withId(id);
+}
+
 void YandexHome::onActionFinished()
 {
     watcher->resume();

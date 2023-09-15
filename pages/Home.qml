@@ -1,7 +1,6 @@
 import QtQuick 2.15
 import "../components/ui" as Components
 import "../components/app" as App
-import "../devices/light/" as Delegates
 
 Item {
     id: appPage
@@ -56,7 +55,7 @@ Item {
                 delegate: Component {
                     Loader {
                         source: switch(deviceType) {
-                            case "devices.types.light": return "qrc:/devices/light/LightDelegate.qml"
+                            case "devices.types.light": return "qrc:/components/delegates/LightDelegate.qml"
                         }
                     }
                 }

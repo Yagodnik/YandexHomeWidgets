@@ -11,9 +11,9 @@
 #include "yandex/yandexaccount.h"
 #include "3rdparty/desktopfeatures.h"
 
-// TODO: Refactor yandex home class.
-// Just withId method and then working only with what it will return
+// TODO: Add
 // TODO: Check if port is free in YandexOAuth class
+// TODO: Add message if no devices in account
 
 int main(int argc, char *argv[])
 {

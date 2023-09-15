@@ -27,6 +27,6 @@
         <file>components/app/DevicesHeader.qml</file>
         <file>components/app/Header.qml</file>
         <file>pages/Error.qml</file>
-        <file>devices/light/LightDelegate.qml</file>
+        <file>components/delegates/LightDelegate.qml</file>
     </qresource>
 </RCC>
