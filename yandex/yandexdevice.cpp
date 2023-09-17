@@ -7,6 +7,8 @@ YandexDevice::YandexDevice(QString deviceId, QString deviceName, QObject *parent
     this->deviceId = deviceId;
     this->deviceName = deviceName;
     updated = false;
+
+    connect(this, &YandexDevice::infoReady, this, &YandexDevice::onInfoReady);
 }
 
 YandexDevice::~YandexDevice()
@@ -134,4 +136,30 @@ void YandexDevice::generateRequest(QJsonObject action)
 
     QJsonDocument document(baseRequest);
     sendPostRequest(document.toJson());
+}
+
+void YandexDevice::addCapability(QString name, bool live)
+{
+    capabilities.insert(name, live);
+}
+
+void YandexDevice::onInfoReady(QJsonArray deviceCapabilities)
+{
+    foreach (QJsonValueRef ref, deviceCapabilities) {
+        QJsonObject capability = ref.toObject();
+        QString capabilityType = capability["type"].toString();
+        QJsonObject state = capability["state"].toObject();
+        QString capabilityInstance = state["instance"].toString();
+
+        if (capabilities.value(capabilityType)) {
+            QJsonObject state = capability["state"].toObject();
+
+            if (values.value(capabilityInstance) != state["value"].toVariant())
+                haveChanges = true;
+
+            values[capabilityInstance] = state["value"].toVariant();
+        }
+    }
+
+    emit updateFinished(getId());
 }

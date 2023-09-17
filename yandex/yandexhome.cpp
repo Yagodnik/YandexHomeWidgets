@@ -81,8 +81,7 @@ void YandexHome::loadDevices()
                         continue;
                     }
 
-                    connect(lamp, &YandexLamp::actionFinished,
-                            this, &YandexHome::onActionFinished);
+                    connect(lamp, &YandexLamp::actionFinished, this, &YandexHome::onActionFinished);
 
                     this->devices->add(lamp);
                 }

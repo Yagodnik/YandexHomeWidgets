@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QDebug>
+#include <QMap>
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -44,15 +45,23 @@ protected:
     bool haveChanges;
     bool updated;
 
+    QMap<QString, QVariant> values;
+    QMap<QString, bool> capabilities;
+
     QNetworkAccessManager networkManager;    
 
     void sendPostRequest(QByteArray data);
     void getFullInfo();
     void generateRequest(QJsonObject action);
 
+    void addCapability(QString name, bool live);
+
 signals:
     void infoReady(QJsonArray capabilities);
     void updateFinished(QString deviceId);
+
+protected slots:
+    void onInfoReady(QJsonArray deviceCapabilities);
 };
 
 #endif // YANDEXDEVICE_H

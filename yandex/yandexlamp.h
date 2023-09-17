@@ -42,14 +42,9 @@ public:
     Q_INVOKABLE int getMaxTemperature();
 
 private:
-    bool state;
-    int brightness;
     int temperatureMin;
     int temperatureMax;
     ColorModel colorModel;
-
-private slots:
-    void onInfoReady(QJsonArray capabilities);
 };
 
 Q_DECLARE_METATYPE(YandexLamp)

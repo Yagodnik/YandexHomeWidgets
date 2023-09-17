@@ -11,9 +11,9 @@
 #include "yandex/yandexaccount.h"
 #include "3rdparty/desktopfeatures.h"
 
-// TODO: Add
 // TODO: Check if port is free in YandexOAuth class
-// TODO: Add message if no devices in account
+// TODO: Add socket
+// TOOD: Check if colors/temperatures supported by lamp
 
 int main(int argc, char *argv[])
 {
@@ -30,7 +30,6 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     QQmlContext *context = engine.rootContext();
 
-    qmlRegisterType<YandexLamp>("Yandex", 1, 0, "YandexLamp");
     qmlRegisterType<YandexHome>("Yandex", 1, 0, "YandexHome");
     qmlRegisterType<LampsListModel>("Yandex", 1, 0, "DevicesModel");
     qmlRegisterType<TemperaturesModel>("Yandex", 1, 0, "TemperaturesModel");

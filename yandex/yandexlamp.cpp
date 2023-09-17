@@ -11,7 +11,8 @@ YandexLamp::YandexLamp(QString deviceId,
     this->colorModel = colorModel;
     deviceType = "devices.types.light";
 
-    connect(this, &YandexDevice::infoReady, this, &YandexLamp::onInfoReady);
+    addCapability("devices.capabilities.on_off", true);
+    addCapability("devices.capabilities.range", true);
 }
 
 QJsonObject YandexLamp::getDeviceData()
@@ -34,12 +35,12 @@ void YandexLamp::update()
 
 bool YandexLamp::getState()
 {
-    return state;
+    return values["on"].toBool();
 }
 
 int YandexLamp::getBrightness()
 {
-    return brightness;
+    return values["brightness"].toInt();
 }
 
 void YandexLamp::setState(bool state)
@@ -49,6 +50,9 @@ void YandexLamp::setState(bool state)
 
 void YandexLamp::setBrightness(int brightness)
 {
+    if (brightness == 0)
+        brightness = 1;
+
     generateRequest(Range::generate(brightness));
 }
 
@@ -70,32 +74,4 @@ int YandexLamp::getMinTemperature()
 int YandexLamp::getMaxTemperature()
 {
     return temperatureMax;
-}
-
-void YandexLamp::onInfoReady(QJsonArray capabilities)
-{
-    foreach (QJsonValueRef ref, capabilities) {
-        QJsonObject capability = ref.toObject();
-
-        // TODO: Create a generelisation method for Yandex Device
-        if (capability["type"] == "devices.capabilities.on_off") {
-            QJsonObject state = capability["state"].toObject();
-
-            if (QVariant(this->state) != state["value"].toVariant())
-                haveChanges = true;
-
-            this->state = state["value"].toBool();
-        }
-
-        if (capability["type"] == "devices.capabilities.range") {
-            QJsonObject state = capability["state"].toObject();
-
-            if (QVariant(this->brightness) != state["value"].toVariant())
-                haveChanges = true;
-
-            this->brightness = state["value"].toInt();
-        }
-    }
-
-    emit updateFinished(getId());
 }

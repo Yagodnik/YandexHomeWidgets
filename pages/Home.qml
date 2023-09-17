@@ -60,6 +60,35 @@ Item {
                     }
                 }
             }
+
+            Connections {
+                target: yandexHome
+
+                function onDevicesLoaded(result) {
+                    devicesGrid.visible = devicesModel.rowCount() > 0;
+                    noDevicesMessage.visible = (devicesModel.rowCount() === 0);
+                }
+            }
+
+            Item {
+                id: noDevicesMessage
+
+                anchors.fill: parent
+
+                Text {
+                    color: "#1d1e1d"
+
+                    anchors.centerIn: parent
+
+                    verticalAlignment: Text.AlignVCenter
+
+                    font.family: textFont.font.family
+                    font.weight: textFont.font.weight
+                    font.pixelSize: 16
+
+                    text: "У вас нет устройств!"
+                }
+            }
         }
     }
 }
