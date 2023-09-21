@@ -54,6 +54,7 @@ protected:
     void getFullInfo();
     void generateRequest(QJsonObject action);
 
+    void setType(QString type);
     void addCapability(QString name, bool live);
 
 signals:

@@ -46,10 +46,11 @@ void YandexHome::loadDevices()
                 QJsonObject currentDevice = ref.toObject();
                 QString deviceType = currentDevice["type"].toString();
 
+                QString _deviceId = currentDevice["id"].toString();
+                QString _deviceName = currentDevice["name"].toString();
+
                 if (deviceType == "devices.types.light") {
                     // TODO: Move to class
-                    QString lampId = currentDevice["id"].toString();
-                    QString lampName = currentDevice["name"].toString();
                     int temperatureMin = 0, temperatureMax = 0;
                     ColorModel colorModel = DEFAULT;
 
@@ -70,20 +71,31 @@ void YandexHome::loadDevices()
                         }
                     }
 
-                    YandexLamp *lamp = new YandexLamp(lampId,
-                                                      lampName,
+                    YandexLamp *lamp = new YandexLamp(_deviceId,
+                                                      _deviceName,
                                                       temperatureMin,
                                                       temperatureMax,
                                                       colorModel);
 
                     if (lamp == nullptr) {
-                        qDebug() << "Cant create device" << lampName << ";" << lampId;
+                        qDebug() << "Cant create device" << _deviceName << ";" << _deviceId;
                         continue;
                     }
 
                     connect(lamp, &YandexLamp::actionFinished, this, &YandexHome::onActionFinished);
 
                     this->devices->add(lamp);
+                } else if (deviceType == "devices.types.socket") {
+                    YandexSocket *socket = new YandexSocket(_deviceId, _deviceName);
+
+                    if (socket == nullptr) {
+                        qDebug() << "Cant create device" << _deviceName << ";" << _deviceId;
+                        continue;
+                    }
+
+                    connect(socket, &YandexLamp::actionFinished, this, &YandexHome::onActionFinished);
+
+                    this->devices->add(socket);
                 }
             }
 

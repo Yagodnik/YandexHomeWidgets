@@ -9,6 +9,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include "yandex/yandexlamp.h"
+#include"yandex/yandexsocket.h"
 #include "yandex/yandexdevices.h"
 #include "yandex/yandexwatcher.h"
 

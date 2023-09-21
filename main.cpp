@@ -12,7 +12,6 @@
 #include "3rdparty/desktopfeatures.h"
 
 // TODO: Check if port is free in YandexOAuth class
-// TODO: Add socket
 // TOOD: Check if colors/temperatures supported by lamp
 
 int main(int argc, char *argv[])

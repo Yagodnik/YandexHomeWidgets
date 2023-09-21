@@ -56,6 +56,7 @@ Item {
                     Loader {
                         source: switch(deviceType) {
                             case "devices.types.light": return "qrc:/components/delegates/LightDelegate.qml"
+                            case "devices.types.socket": return "qrc:/components/delegates/SocketDelegate.qml"
                         }
                     }
                 }

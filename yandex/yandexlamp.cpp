@@ -9,8 +9,8 @@ YandexLamp::YandexLamp(QString deviceId,
     temperatureMin = tMin;
     temperatureMax = tMax;
     this->colorModel = colorModel;
-    deviceType = "devices.types.light";
 
+    setType("devices.types.light");
     addCapability("devices.capabilities.on_off", true);
     addCapability("devices.capabilities.range", true);
 }

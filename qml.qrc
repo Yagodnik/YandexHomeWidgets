@@ -28,5 +28,6 @@
         <file>components/app/Header.qml</file>
         <file>pages/Error.qml</file>
         <file>components/delegates/LightDelegate.qml</file>
+        <file>components/delegates/SocketDelegate.qml</file>
     </qresource>
 </RCC>

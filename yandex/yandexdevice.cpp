@@ -138,6 +138,11 @@ void YandexDevice::generateRequest(QJsonObject action)
     sendPostRequest(document.toJson());
 }
 
+void YandexDevice::setType(QString type)
+{
+    deviceType = type;
+}
+
 void YandexDevice::addCapability(QString name, bool live)
 {
     capabilities.insert(name, live);

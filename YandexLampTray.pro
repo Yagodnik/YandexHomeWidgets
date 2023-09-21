@@ -23,6 +23,7 @@ SOURCES += \
         yandex/yandexhome.cpp \
         yandex/yandexlamp.cpp \
         yandex/yandexoauth.cpp \
+        yandex/yandexsocket.cpp \
         yandex/yandexwatcher.cpp
 
 HEADERS += \
@@ -45,6 +46,7 @@ HEADERS += \
         yandex/yandexhome.h \
         yandex/yandexlamp.h \
         yandex/yandexoauth.h \
+        yandex/yandexsocket.h \
         yandex/yandexwatcher.h
 
 RESOURCES += qml.qrc
