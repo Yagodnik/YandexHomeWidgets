@@ -8,10 +8,12 @@ Item {
     signal newValue
 
     onValueChanged: {
-        if (!mouseArea.drag.active) {
+        if (!mouseArea.drag.active && !clickArea.isClicked) {
             progress.width = (sliderWidth - handle.width) * value;
             handle.x = (sliderWidth - handle.width) * value;
         }
+
+        clickArea.isClicked = false;
     }
 
     Rectangle {
@@ -29,6 +31,23 @@ Item {
         height: parent.height
         width: handle.x
         x: 0
+    }
+
+    MouseArea {
+        id: clickArea
+        width: parent.width
+        height: parent.height + 6
+        anchors.centerIn: parent
+
+        property bool isClicked: false
+
+        onClicked: {
+            isClicked = true;
+            handle.x = mouseX - handle.width / 2;
+
+            root.value = (handle.x / mouseArea.drag.maximumX).toFixed(2);
+            root.newValue();
+        }
     }
 
     Rectangle {
@@ -70,6 +89,7 @@ Item {
             drag.maximumX: root.width - handle.width
             drag.onActiveChanged: {
                 if (!drag.active) {
+                    console.log(handle.x)
                     root.value = (handle.x / drag.maximumX).toFixed(2);
                     root.newValue();
                 }
