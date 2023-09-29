@@ -12,7 +12,6 @@ public:
     explicit YandexSocket(QString deviceId, QString deviceName);
 
     QJsonObject getDeviceData();
-    void update();
 
     bool getState();
 

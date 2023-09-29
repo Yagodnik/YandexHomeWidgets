@@ -17,7 +17,7 @@ Item {
         font.weight: textFont.font.weight
         font.pixelSize: 14
 
-        text: "Загрузка..."
+        text: qsTr("Загрузка...")
     }
 
     Item {

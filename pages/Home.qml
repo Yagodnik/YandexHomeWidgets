@@ -87,7 +87,7 @@ Item {
                     font.weight: textFont.font.weight
                     font.pixelSize: 16
 
-                    text: "У вас нет устройств!"
+                    text: qsTr("У вас нет устройств!")
                 }
             }
         }

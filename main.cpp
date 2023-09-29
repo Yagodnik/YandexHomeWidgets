@@ -1,7 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-#include "models/lampslistmodel.h"
+#include "models/deviceslistmodel.h"
 #include "models/colorsmodel.h"
 #include "models/temperaturesmodel.h"
 #include <QtNetworkAuth>
@@ -12,7 +12,9 @@
 #include "3rdparty/desktopfeatures.h"
 
 // TODO: Check if port is free in YandexOAuth class
-// TOOD: Check if colors/temperatures supported by lamp
+// TODO: Add new temperatutes
+// TODO: Fix double click
+// TODO: Check if device is not active at all + special mark for it
 
 int main(int argc, char *argv[])
 {
@@ -20,6 +22,8 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
     QGuiApplication app(argc, argv);
+
+    qDebug() << QApplication::doubleClickInterval();
 
     YandexAccount account;
     YandexOAuth oauth;
@@ -30,7 +34,7 @@ int main(int argc, char *argv[])
     QQmlContext *context = engine.rootContext();
 
     qmlRegisterType<YandexHome>("Yandex", 1, 0, "YandexHome");
-    qmlRegisterType<LampsListModel>("Yandex", 1, 0, "DevicesModel");
+    qmlRegisterType<DevicesListModel>("Yandex", 1, 0, "DevicesModel");
     qmlRegisterType<TemperaturesModel>("Yandex", 1, 0, "TemperaturesModel");
 
     context->setContextProperty("colorModel", &colorModel);

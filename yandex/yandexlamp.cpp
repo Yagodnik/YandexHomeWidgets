@@ -20,17 +20,12 @@ QJsonObject YandexLamp::getDeviceData()
     QJsonObject data;
 
     data["id"] = deviceId;
-    data["name"] = deviceName;
+    data["name"] = deviceName.length() <= 10 ? deviceName : deviceName.mid(0, 10) + "...";
     data["state"] = getState();
     data["brightness"] = getBrightness();
     data["online"] = isOnline();
 
     return data;
-}
-
-void YandexLamp::update()
-{
-    getFullInfo();
 }
 
 bool YandexLamp::getState()
@@ -74,4 +69,9 @@ int YandexLamp::getMinTemperature()
 int YandexLamp::getMaxTemperature()
 {
     return temperatureMax;
+}
+
+bool YandexLamp::isColorsSupported()
+{
+    return colorModel != DEFAULT;
 }

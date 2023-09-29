@@ -70,7 +70,7 @@ QString YandexOAuth::getCallbackContent()
 
     if (!document.open(QIODevice::ReadOnly)) {
         qDebug() << "Cant open file with callback!";
-        return "Авторизация выполнена успешно! Теперь вы можете свободно закрыть эту страницу и вернуться в приложение";
+        return tr("Авторизация выполнена успешно! Теперь вы можете свободно закрыть эту страницу и вернуться в приложение");
     }
 
     QString content = document.readAll();

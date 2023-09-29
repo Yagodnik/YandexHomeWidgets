@@ -16,6 +16,33 @@ Window {
     flags: Qt.FramelessWindowHint | Qt.Popup
     color: "transparent"
 
+//    property bool canShowPopup: true
+
+//    Timer {
+//        id: doubleClickTimer
+//        interval: 500
+//        running: false
+//        repeat: false
+
+//        onTriggered: {
+//            window.canShowPopup = true;
+//            console.log("Done: " + window.canShowPopup)
+//        }
+//    }
+
+//    function show_window() {
+//        console.log(window.canShowPopup)
+
+//        if (window.canShowPopup)
+//            window.show();
+//    }
+
+//    function hide_window() {
+//        window.hide();
+//        window.canShowPopup = false;
+//        doubleClickTimer.start();
+//    }
+
     DevicesModel {
         id: devicesModel
     }
@@ -109,17 +136,17 @@ Window {
             const h = position.height;
 
             if (y0 > 0 && x0 === 0) {
-                window.x = Screen.desktopAvailableWidth - 20 - width
-                window.y = Screen.desktopAvailableHeight - 5 - window.height
+                window.x = geometry.x - window.width / 2 + geometry.width;
+                window.y = geometry.y - window.height - 5;
             } else if (y0 === 0 && x0 === 0 && w < h) {
-                window.x = w + 5
-                window.y = Screen.desktopAvailableHeight - height - 50
+                window.x = geometry.x + w + 5;
+                window.y = geometry.y - window.height / 2 - geometry.height;
             } else if (y0 === 0 && x0 === 0 && h < w) {
-                window.x = Screen.desktopAvailableWidth - width + Screen.virtualX - 50
-                window.y = Screen.virtualY + h + 50
+                window.x = geometry.x - window.width / 2 + geometry.width;
+                window.y = geometry.y + 15 + h;
             } else {
-                window.x = Screen.desktopAvailableWidth - width - 5
-                window.y = Screen.desktopAvailableHeight - height - 50
+                window.x = geometry.x - window.width - 15;
+                window.y = geometry.y - window.height / 2 - geometry.height;
             }
 
             if (!window.visible) {

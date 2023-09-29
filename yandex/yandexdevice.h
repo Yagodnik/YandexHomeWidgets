@@ -25,7 +25,7 @@ public:
     bool isOnline();
 
     virtual QJsonObject getDeviceData() = 0;
-    virtual void update() = 0;
+    void update();
 
     bool isUpdated();
     bool isChanged();

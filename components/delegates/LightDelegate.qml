@@ -8,6 +8,15 @@ Item {
     height: 204
     clip: true
 
+    Component.onCompleted: {
+        if (!yandexHome.withId(deviceData["id"]).isColorsSupported()) {
+            delegate.height = 58;
+            temperaturePicker.visible = false;
+            colorPicker.visible = false;
+            minimizeButton.visible = false;
+        }
+    }
+
     state: "maximized"
 
     states: [

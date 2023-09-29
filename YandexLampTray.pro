@@ -2,6 +2,8 @@ QT += quick
 QT += networkauth
 QT += widgets
 
+win32:RC_ICONS += assets/icon.ico
+
 CONFIG += c++11
 
 SOURCES += \
@@ -10,8 +12,8 @@ SOURCES += \
         3rdparty/temperatures.cpp \
         main.cpp \
         models/colorsmodel.cpp \
-        models/lampslistmodel.cpp \
         3rdparty/secrets.cpp \
+        models/deviceslistmodel.cpp \
         models/temperaturesmodel.cpp \
         yandex/capabilities/basecapability.cpp \
         yandex/capabilities/colorsetting.cpp \
@@ -32,8 +34,8 @@ HEADERS += \
         3rdparty/desktopfeatures.h \
         3rdparty/temperatures.h \
         models/colorsmodel.h \
-        models/lampslistmodel.h \
         3rdparty/secrets.h \
+        models/deviceslistmodel.h \
         models/temperaturesmodel.h \
         yandex/capabilities/basecapability.h \
         yandex/capabilities/colorsetting.h \

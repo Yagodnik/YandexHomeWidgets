@@ -12,16 +12,11 @@ QJsonObject YandexSocket::getDeviceData()
     QJsonObject data;
 
     data["id"] = deviceId;
-    data["name"] = deviceName;
+    data["name"] = deviceName.length() <= 10 ? deviceName : deviceName.mid(0, 10) + "...";
     data["state"] = getState();
-//    data["online"] = isOnline();
+    data["online"] = isOnline();
 
     return data;
-}
-
-void YandexSocket::update()
-{
-    getFullInfo();
 }
 
 bool YandexSocket::getState()

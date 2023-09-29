@@ -29,7 +29,6 @@ public:
                         ColorModel colorModel = HSV);
 
     QJsonObject getDeviceData();
-    void update();
 
     bool getState();
     int getBrightness();
@@ -40,6 +39,7 @@ public:
     Q_INVOKABLE void setTemperature(int temperature);
     Q_INVOKABLE int getMinTemperature();
     Q_INVOKABLE int getMaxTemperature();
+    Q_INVOKABLE bool isColorsSupported();
 
 private:
     int temperatureMin;

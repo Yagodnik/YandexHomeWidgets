@@ -30,6 +30,11 @@ bool YandexDevice::isOnline()
     return deviceOnline;
 }
 
+void YandexDevice::update()
+{
+    getFullInfo();
+}
+
 bool YandexDevice::isUpdated()
 {
     return updated;

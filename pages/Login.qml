@@ -19,13 +19,13 @@ Item {
         font.weight: textFont.font.weight
         font.pixelSize: 12
 
-        text: "Необходимо войти в аккаунт, чтобы\nприложение могло получить доступ\nк вашим устройствам"
+        text: qsTr("Необходимо войти в аккаунт, чтобы\nприложение могло получить доступ\nк вашим устройствам")
     }
 
     Components.Button {
         id: loginButton
 
-        text: "Войти в аккаунт Яндекс"
+        text: qsTr("Войти в аккаунт Яндекс")
 
         width: 180
         height: 28

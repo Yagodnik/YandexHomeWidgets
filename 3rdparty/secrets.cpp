@@ -11,7 +11,7 @@ Secrets *Secrets::getInstance()
 
     if (!secrets.open(QIODevice::ReadOnly)) {
         qDebug() << "Cant open file with secrets!";
-        return nullptr;
+        exit(-1);
     }
 
     QString content = secrets.readAll();
