@@ -113,7 +113,11 @@ void YandexDevice::getFullInfo()
             QJsonObject root = document.object();
             QJsonArray capabilities = root["capabilities"].toArray();
 
-            emit infoReady(capabilities);
+            if (root["state"].toString() == "online")
+                emit infoReady(capabilities, true);
+            else
+                emit infoReady(capabilities, false);
+
         } else if (reply->error() == QNetworkReply::HostNotFoundError ||
                    reply->error() == QNetworkReply::UnknownNetworkError){
             deviceOnline = false;
@@ -153,8 +157,10 @@ void YandexDevice::addCapability(QString name, bool live)
     capabilities.insert(name, live);
 }
 
-void YandexDevice::onInfoReady(QJsonArray deviceCapabilities)
+void YandexDevice::onInfoReady(QJsonArray deviceCapabilities, bool isOnline)
 {
+    deviceOnline = isOnline;
+
     foreach (QJsonValueRef ref, deviceCapabilities) {
         QJsonObject capability = ref.toObject();
         QString capabilityType = capability["type"].toString();

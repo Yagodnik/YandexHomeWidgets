@@ -58,11 +58,11 @@ protected:
     void addCapability(QString name, bool live);
 
 signals:
-    void infoReady(QJsonArray capabilities);
+    void infoReady(QJsonArray capabilities, bool isOnline);
     void updateFinished(QString deviceId);
 
 protected slots:
-    void onInfoReady(QJsonArray deviceCapabilities);
+    void onInfoReady(QJsonArray deviceCapabilities, bool isOnline);
 };
 
 #endif // YANDEXDEVICE_H

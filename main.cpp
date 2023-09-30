@@ -11,10 +11,9 @@
 #include "yandex/yandexaccount.h"
 #include "3rdparty/desktopfeatures.h"
 
-// TODO: Check if port is free in YandexOAuth class
-// TODO: Add new temperatutes
+// TODO: Fix troubles with official application
 // TODO: Fix double click
-// TODO: Check if device is not active at all + special mark for it
+// TODO: Add new temperatutes
 
 int main(int argc, char *argv[])
 {
@@ -22,8 +21,6 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
     QGuiApplication app(argc, argv);
-
-    qDebug() << QApplication::doubleClickInterval();
 
     YandexAccount account;
     YandexOAuth oauth;
