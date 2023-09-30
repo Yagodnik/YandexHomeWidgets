@@ -17,3 +17,8 @@ QRect DesktopFeatures::getTaskbarPosition()
 
     return taskbar;
 }
+
+int DesktopFeatures::getDoubleclickTime()
+{
+    return QApplication::doubleClickInterval();
+}

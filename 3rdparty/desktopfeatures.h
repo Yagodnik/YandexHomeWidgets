@@ -13,6 +13,7 @@ public:
     explicit DesktopFeatures(QObject *parent = nullptr);
 
     Q_INVOKABLE QRect getTaskbarPosition();
+    Q_INVOKABLE int getDoubleclickTime();
 };
 
 #endif // DESKTOPFEATURES_H

@@ -1,4 +1,4 @@
-import QtQuick 2.15
+import QtQuick
 
 GridView {
     id: root
@@ -20,10 +20,13 @@ GridView {
         height: root.cellHeight - 4
 
         state: "noHover"
+        border.width: 1
+        border.color: "#8e978f"
 
         MouseArea {
             anchors.fill: parent
             hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
 
             onClicked: {
                 currentColor = model[root.valueRole];

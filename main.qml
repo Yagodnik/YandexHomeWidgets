@@ -16,32 +16,34 @@ Window {
     flags: Qt.FramelessWindowHint | Qt.Popup
     color: "transparent"
 
-//    property bool canShowPopup: true
+    property bool canShowPopup: true
 
-//    Timer {
-//        id: doubleClickTimer
-//        interval: 500
-//        running: false
-//        repeat: false
+    Timer {
+        id: doubleClickTimer
+        interval: desktopFeatures.getDoubleclickTime()
+        running: false
+        repeat: false
 
-//        onTriggered: {
-//            window.canShowPopup = true;
-//            console.log("Done: " + window.canShowPopup)
-//        }
-//    }
+        onTriggered: {
+            window.canShowPopup = true;
+        }
+    }
 
-//    function show_window() {
-//        console.log(window.canShowPopup)
+    function show_window() {
+        console.log(window.canShowPopup)
 
-//        if (window.canShowPopup)
-//            window.show();
-//    }
+        if (window.canShowPopup) {
+            window.show();
+            window.raise();
+            window.requestActivate();
+        }
+    }
 
-//    function hide_window() {
-//        window.hide();
-//        window.canShowPopup = false;
-//        doubleClickTimer.start();
-//    }
+    function hide_window() {
+        window.hide();
+        window.canShowPopup = false;
+        doubleClickTimer.start();
+    }
 
     DevicesModel {
         id: devicesModel
@@ -72,7 +74,7 @@ Window {
 
     onActiveFocusItemChanged: {
         if (!activeFocusItem) {
-            window.hide();
+            hide_window();
         }
     }
 
@@ -150,11 +152,9 @@ Window {
             }
 
             if (!window.visible) {
-                window.show();
-                window.raise();
-                window.requestActivate();
+                show_window();
             } else {
-                window.hide();
+                hide_window();
             }
         }
 

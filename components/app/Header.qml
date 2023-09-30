@@ -1,5 +1,5 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.4
+import QtQuick
+import QtQuick.Controls
 import "../ui" as Components
 
 Components.Panel {

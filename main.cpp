@@ -11,10 +11,6 @@
 #include "yandex/yandexaccount.h"
 #include "3rdparty/desktopfeatures.h"
 
-// TODO: Fix troubles with official application
-// TODO: Fix double click
-// TODO: Add new temperatutes
-
 int main(int argc, char *argv[])
 {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)

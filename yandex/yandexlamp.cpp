@@ -21,6 +21,7 @@ QJsonObject YandexLamp::getDeviceData()
 
     data["id"] = deviceId;
     data["name"] = deviceName.length() <= 10 ? deviceName : deviceName.mid(0, 10) + "...";
+    data["fullName"] = deviceName;
     data["state"] = getState();
     data["brightness"] = getBrightness();
     data["online"] = isOnline();

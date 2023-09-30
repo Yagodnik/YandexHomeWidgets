@@ -1,4 +1,5 @@
-import QtQuick 2.15
+import QtQuick
+import QtQuick.Controls
 import "../../components/ui" as Components
 import Yandex 1.0
 
@@ -87,6 +88,16 @@ Item {
         font.pixelSize: 19
 
         text: deviceData["name"]
+
+        ToolTip.delay: 700
+        ToolTip.text: deviceData["fullName"]
+        ToolTip.visible: deviceData["fullName"] ? tooltipMouseArea.containsMouse : false
+
+        MouseArea {
+            id: tooltipMouseArea
+            anchors.fill: parent
+            hoverEnabled: true
+        }
     }
 
     Components.Switch {
