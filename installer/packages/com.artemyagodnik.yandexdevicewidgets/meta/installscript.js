@@ -11,6 +11,7 @@ Component.prototype.createOperations = function()
         if (installer.value("os") == "win") { 
             try {
                 component.addOperation("CreateShortcut", "@TargetDir@\\YandexLampTray.exe", "@StartMenuDir@/YandexHomeWidgets.lnk");
+                component.addOperation("CreateShortcut", "@TargetDir@\\YandexLampTray.exe", "@StartMenuDir@/YandexHomeWidgets.lnk");
             } catch (e) {
                 print(e)
             }

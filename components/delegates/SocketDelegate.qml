@@ -8,6 +8,35 @@ Item {
     width: devicesGrid.width - 4
     height: 32
     clip: true
+    enabled: deviceData["online"]
+
+    Item {
+        id: offlineMark
+        z: 100
+        anchors.fill: parent
+        visible: !deviceData["online"]
+
+        Rectangle {
+            anchors.fill: parent
+            color: "#8e978f"
+            opacity: 0.3
+            radius: 3
+        }
+
+        Text {
+            color: "#1d1e1d"
+            anchors.centerIn: parent
+
+            verticalAlignment: Text.AlignVCenter
+
+            font.family: textFont.font.family
+            font.weight: textFont.font.weight
+            font.pixelSize: 14
+
+            text: qsTr("Устройство не в сети!")
+        }
+    }
+
 
     Rectangle {
         width: 3

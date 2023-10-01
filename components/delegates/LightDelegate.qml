@@ -8,6 +8,34 @@ Item {
     width: devicesGrid.width - 4
     height: 204
     clip: true
+    enabled: deviceData["online"]
+
+    Item {
+        id: offlineMark
+        z: 100
+        anchors.fill: parent
+        visible: !deviceData["online"]
+
+        Rectangle {
+            anchors.fill: parent
+            color: "#8e978f"
+            opacity: 0.3
+            radius: 3
+        }
+
+        Text {
+            color: "#1d1e1d"
+            anchors.centerIn: parent
+
+            verticalAlignment: Text.AlignVCenter
+
+            font.family: textFont.font.family
+            font.weight: textFont.font.weight
+            font.pixelSize: 14
+
+            text: qsTr("Устройство не в сети!")
+        }
+    }
 
     Component.onCompleted: {
         if (!yandexHome.withId(deviceData["id"]).isColorsSupported()) {
@@ -118,39 +146,6 @@ Item {
         onClicked: {
             yandexHome.setWatcherState(false);
             yandexHome.withId(deviceData["id"]).setState(value);
-        }
-    }
-
-    Item {
-        id: offlineMark
-        width: 60
-        height: 22
-
-        anchors.top: parent.top
-        anchors.topMargin: 6
-        anchors.left: onOff.right
-        anchors.leftMargin: 15
-
-        visible: !deviceData["online"]
-
-        Rectangle {
-            anchors.fill: parent
-            color: "#e77fa2"
-            radius: 45
-        }
-
-        Text {
-            anchors.fill: parent
-            text: "Не в сети"
-
-            color: "#ecf9e6"
-
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignHCenter
-
-            font.family: textFont.font.family
-            font.weight: textFont.font.weight
-            font.pixelSize: 9
         }
     }
 

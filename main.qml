@@ -30,8 +30,6 @@ Window {
     }
 
     function show_window() {
-        console.log(window.canShowPopup)
-
         if (window.canShowPopup) {
             window.show();
             window.raise();

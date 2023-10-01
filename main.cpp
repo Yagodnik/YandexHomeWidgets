@@ -16,7 +16,23 @@ int main(int argc, char *argv[])
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
+    // I dont know what this key means but ok
+    QSharedMemory shared("62d60669-bb94-4a94-88bb-b964890a7e04");
+    if(!shared.create(512, QSharedMemory::ReadWrite))
+        exit(0);
+
     QGuiApplication app(argc, argv);
+
+    #ifdef Q_OS_WIN32
+        QSettings settings("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
+        settings.setValue("YandexHomeWidgets", QDir::toNativeSeparators(QCoreApplication::applicationFilePath()));
+        settings.sync();
+    #endif
+
+    #ifdef Q_OS_LINUX
+        qWarning() << "Sorry guys, you should add program to autostart yourself... "
+                      "But I think it is like everyday routine for you ¯\_(ツ)_/¯";
+    #endif
 
     YandexAccount account;
     YandexOAuth oauth;
