@@ -3,3 +3,4 @@ assets/secrets.json
 YandexLampTray.pro.user
 installer/packages/com.artemyagodnik.yandexdevicewidgets/data
 installer/installer.exe
+binaries/
