@@ -10,6 +10,7 @@ SOURCES += \
         3rdparty/colors.cpp \
         3rdparty/desktopfeatures.cpp \
         3rdparty/temperatures.cpp \
+        3rdparty/updater.cpp \
         main.cpp \
         models/colorsmodel.cpp \
         3rdparty/secrets.cpp \
@@ -33,6 +34,7 @@ HEADERS += \
         3rdparty/constants.h \
         3rdparty/desktopfeatures.h \
         3rdparty/temperatures.h \
+        3rdparty/updater.h \
         models/colorsmodel.h \
         3rdparty/secrets.h \
         models/deviceslistmodel.h \

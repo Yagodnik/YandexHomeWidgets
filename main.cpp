@@ -10,6 +10,9 @@
 #include "yandex/yandexhome.h"
 #include "yandex/yandexaccount.h"
 #include "3rdparty/desktopfeatures.h"
+#include "3rdparty/updater.h"
+
+// TODO: Fix seg fault when sending requests without internet
 
 int main(int argc, char *argv[])
 {
@@ -17,9 +20,10 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
     // I dont know what this key means but ok
-    QSharedMemory shared("62d60669-bb94-4a94-88bb-b964890a7e04");
-    if(!shared.create(512, QSharedMemory::ReadWrite))
-        exit(0);
+//    QSharedMemory shared("62d60669-bb94-4a94-88bb-b964890a7e04");
+//    if(!shared.create(512, QSharedMemory::ReadWrite))
+//        exit(0);
+
 
     QGuiApplication app(argc, argv);
 
@@ -38,6 +42,7 @@ int main(int argc, char *argv[])
     YandexOAuth oauth;
     ColorsModel colorModel;
     DesktopFeatures desktopFeatures;
+    Updater updater("https://bitbucket.org/CatTheBurger/binaries/raw/HEAD/");
 
     QQmlApplicationEngine engine;
     QQmlContext *context = engine.rootContext();
@@ -46,6 +51,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<DevicesListModel>("Yandex", 1, 0, "DevicesModel");
     qmlRegisterType<TemperaturesModel>("Yandex", 1, 0, "TemperaturesModel");
 
+    context->setContextProperty("updater", &updater);
     context->setContextProperty("colorModel", &colorModel);
     context->setContextProperty("yandexOAuth", &oauth);
     context->setContextProperty("yandexAccount", &account);

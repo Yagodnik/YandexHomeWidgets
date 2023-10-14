@@ -119,9 +119,19 @@ Window {
         }
     }
 
+
+    Connections {
+        target: updater
+
+        function onUpdateAvaliable(data) {
+            trayIcon.showMessage("Yandex Home Widgets", "Доступна новая версия приложения!");
+        }
+    }
+
     SystemTrayIcon {
         id: trayIcon
         visible: true
+        icon.name: "Yandex Home Widgets"
         icon.source: "qrc:/assets/icon.png"
 
         onActivated: function(reason) {
@@ -129,6 +139,8 @@ Window {
                 return;
 
             const position = desktopFeatures.getTaskbarPosition();
+
+            console.log(geometry.x, geometry.y)
 
             const x0 = position.x;
             const y0 = position.y;
@@ -164,8 +176,14 @@ Window {
 
             MenuItem {
                 text: qsTr("Github")
-                onTriggered: Qt.openUrlExternally("https://github.com/Yagodnik/YandexLampApp")
+                onTriggered: Qt.openUrlExternally("https://github.com/Yagodnik/YandexHomeWidgets")
             }
+        }
+
+        onMessageClicked: function() {
+            // Show dialog about new version maybe
+
+            Qt.openUrlExternally("https://github.com/Yagodnik/YandexHomeWidgets")
         }
     }
 
