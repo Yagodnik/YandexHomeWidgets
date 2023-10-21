@@ -20,12 +20,15 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
     // I dont know what this key means but ok
-//    QSharedMemory shared("62d60669-bb94-4a94-88bb-b964890a7e04");
-//    if(!shared.create(512, QSharedMemory::ReadWrite))
-//        exit(0);
-
-
     QGuiApplication app(argc, argv);
+
+    if (!QGuiApplication::arguments().contains("-allow-several-instances")) {
+        QSharedMemory shared("62d60669-bb94-4a94-88bb-b964890a7e04");
+        if(!shared.create(512, QSharedMemory::ReadWrite)) {
+            qDebug() << "Cant run several instances! (run with -allow-several-instances if you need)";
+            exit(0);
+        }
+    }
 
     #ifdef Q_OS_WIN32
         QSettings settings("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
@@ -42,7 +45,9 @@ int main(int argc, char *argv[])
     YandexOAuth oauth;
     ColorsModel colorModel;
     DesktopFeatures desktopFeatures;
-    Updater updater("https://bitbucket.org/CatTheBurger/binaries/raw/HEAD/");
+
+    // TODO: Move to special thread
+    Updater updater("Yagodnik/TestRepo");
 
     QQmlApplicationEngine engine;
     QQmlContext *context = engine.rootContext();

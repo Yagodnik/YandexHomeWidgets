@@ -5,6 +5,7 @@
 #include <QApplication>
 #include <QScreen>
 #include <QRect>
+#include <QMessageBox>
 
 class DesktopFeatures : public QObject
 {

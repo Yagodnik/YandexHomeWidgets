@@ -3,7 +3,7 @@ import QtQuick.Window
 import QtQuick.Layouts 1.12
 import Qt.labs.platform
 import Qt.labs.settings
-import "./components/" as Components
+import "./components/ui" as Components
 import "./pages" as Pages
 import Yandex 1.0
 
@@ -119,7 +119,6 @@ Window {
         }
     }
 
-
     Connections {
         target: updater
 
@@ -178,12 +177,114 @@ Window {
                 text: qsTr("Github")
                 onTriggered: Qt.openUrlExternally("https://github.com/Yagodnik/YandexHomeWidgets")
             }
+
+            MenuItem {
+                text: qsTr("О приложении")
+                onTriggered: myDialog.show()
+            }
         }
 
         onMessageClicked: function() {
             // Show dialog about new version maybe
 
-            Qt.openUrlExternally("https://github.com/Yagodnik/YandexHomeWidgets")
+            Qt.openUrlExternally("https://github.com/Yagodnik/YandexHomeWidgets");
+
+
+
+        }
+    }
+
+    Window {
+        id: myDialog
+        visible: false
+        width: 200
+        height: 120
+        flags: Qt.FramelessWindowHint | Qt.Popup
+        color: "transparent"
+
+        x: 100
+        y: 100
+
+        Rectangle {
+            anchors.fill: parent
+            color: "#ecf9e6"
+            radius: 3
+        }
+
+        Text {
+            id: title
+            height: 20
+
+            color: "#1d1e1d"
+
+            anchors.bottom: version.top
+            anchors.horizontalCenter: parent.horizontalCenter
+
+            horizontalAlignment: Text.AlignHCenter
+
+            font.family: textFont.font.family
+            font.weight: textFont.font.weight
+            font.pixelSize: 14
+
+            text: qsTr("Yandex Home Widgets")
+        }
+
+        Text {
+            id: version
+            height: 20
+
+            color: "#1d1e1d"
+
+            anchors.bottom: link.top
+            anchors.horizontalCenter: parent.horizontalCenter
+
+            horizontalAlignment: Text.AlignHCenter
+
+            font.family: textFont.font.family
+            font.weight: textFont.font.weight
+            font.pixelSize: 12
+            text: "Версия " + updater.getCurrentVersion()
+        }
+
+        Text {
+            id: link
+            height: 20
+
+            color: "#1d1e1d"
+
+            anchors.bottom: closeButton.top
+            anchors.bottomMargin: 3
+            anchors.horizontalCenter: parent.horizontalCenter
+
+            horizontalAlignment: Text.AlignHCenter
+
+            font.family: textFont.font.family
+            font.weight: textFont.font.weight
+            font.pixelSize: 12
+            text: '<a href="https://github.com/Yagodnik/YandexHomeWidgets">GitHub</a>'
+            onLinkActivated: Qt.openUrlExternally("https://github.com/Yagodnik/YandexHomeWidgets")
+
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.NoButton
+                cursorShape: Qt.PointingHandCursor
+            }
+        }
+
+        Components.Button {
+            id: closeButton
+
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 10
+
+            width: 70
+            height: 28
+
+            text: "Hide"
+            onClicked: {
+                myDialog.hide();
+            }
         }
     }
 

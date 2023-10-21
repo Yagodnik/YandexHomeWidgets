@@ -26,6 +26,16 @@ Secrets *Secrets::getInstance()
         instance.data.insert(key, value.toString());
     }
 
+    QFile version(":/assets/version.txt");
+
+    if (!version.open(QIODevice::ReadOnly)) {
+        qDebug() << "Cant open file with secrets!";
+        exit(-1);
+    }
+
+    instance.data.insert(APP_VERSION, version.readAll().trimmed());
+    version.close();
+
     return &instance;
 }
 
@@ -45,5 +55,10 @@ void Secrets::saveToSettings(QString key, QString value)
 void Secrets::clearValue(QString key)
 {
     settings.remove(key);
+}
+
+int Secrets::appVersion()
+{
+    return data.value(APP_VERSION).toInt();
 }
 

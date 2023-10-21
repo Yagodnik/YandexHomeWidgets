@@ -29,5 +29,6 @@
         <file>pages/Error.qml</file>
         <file>components/delegates/LightDelegate.qml</file>
         <file>components/delegates/SocketDelegate.qml</file>
+        <file>assets/version.txt</file>
     </qresource>
 </RCC>

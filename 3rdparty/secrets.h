@@ -7,6 +7,8 @@
 #include <QJsonObject>
 #include <QSettings>
 
+#define APP_VERSION "app_version"
+
 class Secrets
 {
 public:
@@ -15,6 +17,7 @@ public:
     QString get(QString key);
     Q_INVOKABLE void saveToSettings(QString key, QString value);
     void clearValue(QString key);
+    int appVersion();
 
 private:
     QMap<QString, QString> data;
