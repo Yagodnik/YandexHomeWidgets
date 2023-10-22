@@ -23,6 +23,7 @@ public:
 
 signals:
     void updateAvaliable(QVariant data);
+    void downloadProgress(int bytesReaded, int bytesTotal);
 
 private:
     QString repositoryName;
@@ -34,15 +35,19 @@ private:
     void downloadInstaller(QString url);
     bool checkHash(QString original, QString downloaded);
 
+    void copyApp(QString source, QString destination);
+
 signals:
     void manifestLoaded(QByteArray content);
     void blockLoaded(QByteArray block);
+    void readyForUpdate();
 
 private slots:
     void parseManifest(QByteArray content);
     void readyRead();
     void finished();
     void errorOccurred();
+    void onReadyForUpdate();
 };
 
 #endif // UPDATER_H

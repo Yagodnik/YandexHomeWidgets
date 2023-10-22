@@ -49,7 +49,8 @@ void Updater::downloadInstaller(QString url)
 
     connect(reply, &QNetworkReply::readyRead, this, &Updater::readyRead);
     connect(reply, &QNetworkReply::finished, this, &Updater::finished);
-    connect(reply, &QNetworkReply::errorOccurred, this, &Updater::errorOccurred);
+    connect(reply, &QNetworkReply::errorOccurred, this, &Updater::networkErrorOccurred);
+    connect(this, &Updater::readyForUpdate, this, &Updater::onReadyForUpdate);
 
     reply->waitForReadyRead(1000);
 }
@@ -57,6 +58,25 @@ void Updater::downloadInstaller(QString url)
 bool Updater::checkHash(QString original, QString downloaded)
 {
     return true;
+}
+
+void Updater::copyApp(QString source, QString destination)
+{
+    QDir rootDirectory(QGuiApplication::applicationDirPath());
+
+    qDebug() << "Copying from" << source << "to" << destination;
+
+    foreach (QString name, rootDirectory.entryList()) {
+        if (name == "temp")
+            continue;
+
+        QString sourcePath = source + name;
+        QString destinationPath = destination + name;
+
+        QFile::rename(sourcePath, destinationPath);
+    }
+
+    qDebug() << "Copying from" << source << "to" << destination << "finished!";
 }
 
 int Updater::getCurrentVersion()
@@ -105,27 +125,13 @@ void Updater::finished()
 
     targetFile.close();
 
-    QProcess process;
+    copyApp(QGuiApplication::applicationDirPath() + "/",
+            QGuiApplication::applicationDirPath() + "/temp/");
 
-    process.start("F:\\installer.exe");
-
-    if (!process.waitForStarted()) {
-        qDebug() << "Cant start installer!";
-        return;
-    }
-
-    process.waitForFinished(-1);
-
-    // TODO: Add different checks and etc.
-
-    qDebug() << process.exitStatus();
-
-    // TODO: Restart if some problems
-
-    targetFile.remove();
+    emit readyForUpdate();
 }
 
-void Updater::errorOccurred()
+void Updater::networkErrorOccurred()
 {
     QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
 
@@ -135,4 +141,32 @@ void Updater::errorOccurred()
 
     targetFile.close();
     targetFile.remove();
+}
+
+void Updater::onReadyForUpdate()
+{
+    QProcess process;
+    process.start("F:\\installer.exe");
+
+    if (!process.waitForStarted()) {
+        qDebug() << "Cant start installer!";
+        return;
+    }
+
+    process.waitForFinished(-1);
+
+    if (process.exitStatus() != QProcess::NormalExit) {
+        qDebug() << "Some error occured during installing update!";
+        targetFile.remove();
+        return;
+    }
+
+    targetFile.remove();
+
+    // TODO: Copy files to one level up
+    copyApp(QGuiApplication::applicationDirPath() + "/temp/",
+            QGuiApplication::applicationDirPath() + "/");
+
+    QDir tempDirectory(QGuiApplication::applicationDirPath() + "/temp/");
+    tempDirectory.removeRecursively();
 }

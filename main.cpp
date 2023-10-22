@@ -49,6 +49,10 @@ int main(int argc, char *argv[])
     // TODO: Move to special thread
     Updater updater("Yagodnik/TestRepo");
 
+    if (!QGuiApplication::arguments().contains("-disable-updates")) {
+        qDebug() << "Updates disabled!";
+    }
+
     QQmlApplicationEngine engine;
     QQmlContext *context = engine.rootContext();
 
