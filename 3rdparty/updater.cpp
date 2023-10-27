@@ -31,13 +31,13 @@ void Updater::downloadInstaller(QString url)
 {
     qDebug() << "Downloading" << url;
 
-    QDir tempDirectory(QGuiApplication::applicationDirPath() + "/temp");
+    QDir tempDirectory(QDir::tempPath() + "/yandexhomewidgets/");
     if (!tempDirectory.exists())
         tempDirectory.mkpath(".");
 
     // TODO: Check formats
 
-    targetFile.setFileName(QGuiApplication::applicationDirPath() + "/temp/installer.exe");
+    targetFile.setFileName(QDir::tempPath() + "/yandexhomewidgets/" + "installer.exe");
     if (!targetFile.open(QIODevice::ReadWrite)) {
         qDebug() << "Cant create file for downloading!";
         return;
@@ -126,7 +126,7 @@ void Updater::finished()
     targetFile.close();
 
     copyApp(QGuiApplication::applicationDirPath() + "/",
-            QGuiApplication::applicationDirPath() + "/temp/");
+            QDir::tempPath() + "/yandexhomewidgets/");
 
     emit readyForUpdate();
 }
@@ -164,9 +164,9 @@ void Updater::onReadyForUpdate()
     targetFile.remove();
 
     // TODO: Copy files to one level up
-    copyApp(QGuiApplication::applicationDirPath() + "/temp/",
+    copyApp(QDir::tempPath() + "/yandexhomewidgets/",
             QGuiApplication::applicationDirPath() + "/");
 
-    QDir tempDirectory(QGuiApplication::applicationDirPath() + "/temp/");
+    QDir tempDirectory(QDir::tempPath() + "/yandexhomewidgets/");
     tempDirectory.removeRecursively();
 }

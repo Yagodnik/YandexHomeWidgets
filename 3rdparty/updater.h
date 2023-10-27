@@ -46,7 +46,7 @@ private slots:
     void parseManifest(QByteArray content);
     void readyRead();
     void finished();
-    void errorOccurred();
+    void networkErrorOccurred();
     void onReadyForUpdate();
 };
 
