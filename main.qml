@@ -178,10 +178,10 @@ Window {
                 onTriggered: Qt.openUrlExternally("https://github.com/Yagodnik/YandexHomeWidgets")
             }
 
-            MenuItem {
-                text: qsTr("О приложении")
-                onTriggered: myDialog.show()
-            }
+//            MenuItem {
+//                text: qsTr("О приложении")
+//                onTriggered: myDialog.show()
+//            }
         }
 
         onMessageClicked: function() {
