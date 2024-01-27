@@ -4,10 +4,27 @@ Updater::Updater(QString repositoryName, QObject *parent)
     : QObject{parent}
 {
     this->repositoryName = repositoryName;
+    installerProcess = new QProcess(this);
 
     checkUpdates();
 
     connect(this, &Updater::manifestLoaded, this, &Updater::parseManifest);
+
+    connect(installerProcess, &QProcess::readyReadStandardOutput, [script=installerProcess](){
+        qDebug() << "[EXEC] DATA: " << script->readAll();
+    });
+
+    connect(installerProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+            [script = installerProcess](int exitCode, QProcess::ExitStatus exitStatus)
+    {
+        qDebug() << "[EXEC] FINISHED: " << exitCode << exitStatus;
+        if(script->bytesAvailable() > 0)
+            qDebug() << "[EXEC] buffered DATA:" << script->readAll();
+    });
+
+    connect(installerProcess, &QProcess::errorOccurred, [script=installerProcess](QProcess::ProcessError error){
+        qDebug() << "[EXEC] error on execution: " << error << script->errorString();
+    });
 }
 
 void Updater::checkUpdates()
@@ -67,13 +84,26 @@ void Updater::copyApp(QString source, QString destination)
     qDebug() << "Copying from" << source << "to" << destination;
 
     foreach (QString name, rootDirectory.entryList()) {
-        if (name == "temp")
+        if (name == "temp") {
+            qDebug() << "skipping" << name;
             continue;
+        }
 
         QString sourcePath = source + name;
         QString destinationPath = destination + name;
 
-        QFile::rename(sourcePath, destinationPath);
+        qDebug() << sourcePath << "->" << destinationPath;
+
+        if (QFile::exists(destinationPath))
+            QFile::remove(destinationPath);
+
+        bool ret = QFile::copy(sourcePath, destinationPath);
+
+        if (!ret) {
+            qDebug() << "Cant copy" << name;
+        } else {
+            QFile::remove(sourcePath);
+        }
     }
 
     qDebug() << "Copying from" << source << "to" << destination << "finished!";
@@ -128,6 +158,8 @@ void Updater::finished()
     copyApp(QGuiApplication::applicationDirPath() + "/",
             QDir::tempPath() + "/yandexhomewidgets/");
 
+    QGuiApplication::exit(0);
+
     emit readyForUpdate();
 }
 
@@ -145,28 +177,26 @@ void Updater::networkErrorOccurred()
 
 void Updater::onReadyForUpdate()
 {
-    QProcess process;
-    process.start("F:\\installer.exe");
+    qDebug() << "Staring updater at" << QGuiApplication::applicationDirPath() + "/";
 
-    if (!process.waitForStarted()) {
-        qDebug() << "Cant start installer!";
-        return;
-    }
+    QStringList arguments;
+    arguments << "-t" << QGuiApplication::applicationDirPath();
+    arguments << "--accept-licenses";
+    arguments << "--confirm-command";
+    arguments << "install";
 
-    process.waitForFinished(-1);
+    installerProcess->setProgram(QDir::tempPath() + "/yandexhomewidgets/" + "installer.exe");
+    installerProcess->setArguments(arguments);
+    installerProcess->setProcessChannelMode(QProcess::MergedChannels);
+    installerProcess->start();
 
-    if (process.exitStatus() != QProcess::NormalExit) {
-        qDebug() << "Some error occured during installing update!";
-        targetFile.remove();
-        return;
-    }
 
-    targetFile.remove();
+//    targetFile.remove();
 
     // TODO: Copy files to one level up
-    copyApp(QDir::tempPath() + "/yandexhomewidgets/",
-            QGuiApplication::applicationDirPath() + "/");
+//    copyApp(QDir::tempPath() + "/yandexhomewidgets/",
+//            QGuiApplication::applicationDirPath() + "/");
 
-    QDir tempDirectory(QDir::tempPath() + "/yandexhomewidgets/");
-    tempDirectory.removeRecursively();
+//    QDir tempDirectory(QDir::tempPath() + "/yandexhomewidgets/");
+//    tempDirectory.removeRecursively();
 }

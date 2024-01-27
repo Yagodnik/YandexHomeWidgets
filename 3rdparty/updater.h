@@ -29,6 +29,7 @@ private:
     QString repositoryName;
     QNetworkAccessManager networkManager;
     QFile targetFile;
+    QProcess *installerProcess;
 
     void checkUpdates();
 

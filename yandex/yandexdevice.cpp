@@ -73,6 +73,7 @@ void YandexDevice::sendPostRequest(QByteArray data)
     QString hash = QString(QCryptographicHash::hash(time.currentTime().toString().toLocal8Bit(),
                                                     QCryptographicHash::Md5).toHex());
     request.setRawHeader("X-Request-Id", hash.toLocal8Bit());
+    request.setRawHeader("User-Agent", "YandexHomeWidgets");
     request.setRawHeader("Authorization", authorizationHeader.toLocal8Bit());
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
@@ -83,8 +84,10 @@ void YandexDevice::sendPostRequest(QByteArray data)
             deviceOnline = true;
         } else {
             deviceOnline = false;
+            qDebug() << "Network Error:" << reply->errorString() << reply->error();
         }
 
+        reply->abort();
         reply->deleteLater();
 
         emit actionFinished();
@@ -99,12 +102,16 @@ void YandexDevice::getFullInfo()
     QNetworkRequest request(deviceUrl);
     QString authorizationHeader = "Bearer " + secrets->get(OAUTH_TOKEN_NAME);
 
-    request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
+//    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+//    request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
+    request.setRawHeader("User-Agent", "YandexHomeWidgets");
     request.setRawHeader("Authorization", authorizationHeader.toLocal8Bit());
 
     QNetworkReply *reply = networkManager.get(request);
 
     connect(reply, &QNetworkReply::finished, [=]() {
+//        qDebug() << reply->readAll();
+
         if (reply->error() == QNetworkReply::NoError) {
             deviceOnline = true;
             QByteArray response = reply->readAll();
@@ -121,8 +128,12 @@ void YandexDevice::getFullInfo()
         } else if (reply->error() == QNetworkReply::HostNotFoundError ||
                    reply->error() == QNetworkReply::UnknownNetworkError){
             deviceOnline = false;
+            qDebug() << "Network Error:" << reply->errorString() << reply->error();
+        } else {
+            qDebug() << "Network Error:" << reply->errorString() << reply->error();
         }
 
+        reply->abort();
         reply->deleteLater();
     });
 }

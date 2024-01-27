@@ -13,16 +13,18 @@
 #include "3rdparty/updater.h"
 
 // TODO: Fix seg fault when sending requests without internet
+// TODO: Add verbose mode for debug
+// TODO: Add logs
 
 int main(int argc, char *argv[])
 {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
-    // I dont know what this key means but ok
     QGuiApplication app(argc, argv);
 
     if (!QGuiApplication::arguments().contains("-allow-several-instances")) {
+        // I dont know what this key means but ok
         QSharedMemory shared("62d60669-bb94-4a94-88bb-b964890a7e04");
         if(!shared.create(512, QSharedMemory::ReadWrite)) {
             qDebug() << "Cant run several instances! (run with -allow-several-instances if you need)";
@@ -30,16 +32,18 @@ int main(int argc, char *argv[])
         }
     }
 
-    #ifdef Q_OS_WIN32
-        QSettings settings("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
-        settings.setValue("YandexHomeWidgets", QDir::toNativeSeparators(QCoreApplication::applicationFilePath()));
-        settings.sync();
-    #endif
+    if (!QGuiApplication::arguments().contains("-no-autostart")) {
+        #ifdef Q_OS_WIN32
+            QSettings settings("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
+            settings.setValue("YandexHomeWidgets", QDir::toNativeSeparators(QCoreApplication::applicationFilePath()));
+            settings.sync();
+        #endif
 
-    #ifdef Q_OS_LINUX
-        qWarning() << "Sorry guys, you should add program to autostart yourself... "
-                      "But I think it is like everyday routine for you ¯\_(ツ)_/¯";
-    #endif
+        #ifdef Q_OS_LINUX
+            qWarning() << "Sorry guys, you should add program to autostart yourself... "
+                          "But I think it is like everyday routine for you ¯\_(ツ)_/¯";
+        #endif
+    }
 
     YandexAccount account;
     YandexOAuth oauth;
@@ -47,7 +51,7 @@ int main(int argc, char *argv[])
     DesktopFeatures desktopFeatures;
 
     // TODO: Move to special thread
-    Updater updater("Yagodnik/TestRepo");
+//    Updater updater("Yagodnik/TestRepo");
 
     if (!QGuiApplication::arguments().contains("-disable-updates")) {
         qDebug() << "Updates disabled!";
@@ -60,7 +64,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<DevicesListModel>("Yandex", 1, 0, "DevicesModel");
     qmlRegisterType<TemperaturesModel>("Yandex", 1, 0, "TemperaturesModel");
 
-    context->setContextProperty("updater", &updater);
+//    context->setContextProperty("updater", &updater);
     context->setContextProperty("colorModel", &colorModel);
     context->setContextProperty("yandexOAuth", &oauth);
     context->setContextProperty("yandexAccount", &account);

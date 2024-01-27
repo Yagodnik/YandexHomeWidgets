@@ -24,18 +24,21 @@ void YandexHome::loadDevices()
     Secrets *secrets = Secrets::getInstance();
 
     QString requestUrl = "https://api.iot.yandex.net/v1.0/user/info";
-    QString authorizationHeader = QString("Bearer " + secrets->get(OAUTH_TOKEN_NAME));
+    QString authorizationHeader = "Bearer " + secrets->get(OAUTH_TOKEN_NAME);
     QNetworkRequest request(requestUrl);
 
-    request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
+//    request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
+    request.setRawHeader("User-Agent", "YandexHomeWidgets");
     request.setRawHeader("Authorization", authorizationHeader.toLocal8Bit());
 
     QNetworkReply *reply = networkAccessManager.get(request);
 
     connect(reply, &QNetworkReply::finished, [=]() {
-        if (reply->error() == QNetworkReply::NoError) {
-            QByteArray response = reply->readAll();
+        QByteArray response = reply->readAll();
 
+        qDebug() << QString(response);
+
+        if (reply->error() == QNetworkReply::NoError) {
             QJsonDocument jsonResponse = QJsonDocument::fromJson(response);
             QJsonObject jsonObject = jsonResponse.object();
             QJsonArray devices = jsonObject["devices"].toArray();
