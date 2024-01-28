@@ -3,7 +3,7 @@
 ![](./images/preview.gif)
 
 Yandex Home Widgets - приложение, позволяющее управлять устройствами умного дома Яндекс, не отходя от вашего компьютера
-
+Демо: https://www.youtube.com/watch?v=p_cD33zuICs
 # Установка
 Скачать установщик можно вот тут (Для Windows):
 ![](./images/1.png)
