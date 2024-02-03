@@ -17,7 +17,7 @@ Colors::Colors(QObject *parent) : QObject(parent)
 
     QJsonArray root = document.array();
 
-    foreach(QJsonValueRef colorRef, root) {
+    foreach(QJsonValueConstRef colorRef, root) {
         QJsonObject color = colorRef.toObject();
 
         colors.push_back(QColor(

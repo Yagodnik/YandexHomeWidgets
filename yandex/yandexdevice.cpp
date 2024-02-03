@@ -172,7 +172,7 @@ void YandexDevice::onInfoReady(QJsonArray deviceCapabilities, bool isOnline)
 {
     deviceOnline = isOnline;
 
-    foreach (QJsonValueRef ref, deviceCapabilities) {
+    foreach (QJsonValueConstRef ref, deviceCapabilities) {
         QJsonObject capability = ref.toObject();
         QString capabilityType = capability["type"].toString();
         QJsonObject state = capability["state"].toObject();

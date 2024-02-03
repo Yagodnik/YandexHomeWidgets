@@ -46,7 +46,7 @@ void Temperatures::configure(int min, int max)
 
     QJsonArray root = document.array();
 
-    foreach(QJsonValueRef ref, root) {
+    foreach(QJsonValueConstRef ref, root) {
         QJsonObject element = ref.toObject();
         QPair<int, QColor> pair;
 

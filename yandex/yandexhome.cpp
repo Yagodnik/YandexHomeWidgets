@@ -36,8 +36,6 @@ void YandexHome::loadDevices()
     connect(reply, &QNetworkReply::finished, [=]() {
         QByteArray response = reply->readAll();
 
-        qDebug() << QString(response);
-
         if (reply->error() == QNetworkReply::NoError) {
             QJsonDocument jsonResponse = QJsonDocument::fromJson(response);
             QJsonObject jsonObject = jsonResponse.object();
@@ -45,7 +43,7 @@ void YandexHome::loadDevices()
 
             clearDevices();
 
-            foreach (QJsonValueRef ref, devices) {
+            foreach (QJsonValueConstRef ref, devices) {
                 QJsonObject currentDevice = ref.toObject();
                 QString deviceType = currentDevice["type"].toString();
 
@@ -58,7 +56,7 @@ void YandexHome::loadDevices()
                     ColorModel colorModel = DEFAULT;
 
                     QJsonArray capabilities = currentDevice["capabilities"].toArray();
-                    foreach (QJsonValueRef ref, capabilities) {
+                    foreach (QJsonValueConstRef ref, capabilities) {
                         QJsonObject capability = ref.toObject();
                         QJsonObject parameters = capability["parameters"].toObject();
 
